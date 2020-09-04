@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCarreraTable extends Migration
+class CreateFondosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateCarreraTable extends Migration
      */
     public function up()
     {
-        Schema::create('carrera', function (Blueprint $table) {
+        Schema::create('fondos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre', 150)->unique();
-            
+            $table->decimal('cantidad', 11,2);
+
+            $table->unsignedBigInteger('tipo_fondo__id');
+            $table->foreign('tipo_fondo_id')->references('id')->on('tipo_fondo');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateCarreraTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('carrera');
+        Schema::dropIfExists('fondos');
     }
 }
