@@ -30,7 +30,7 @@ class Persona extends Model
     ];
 
     protected $casts = [
-        'fecha_nacimiento' => 'datetime: d/m/Y'
+        'fecha_nacimiento' => 'date: d/m/Y'
     ];
 
     public function setEmailAttribute($value)
