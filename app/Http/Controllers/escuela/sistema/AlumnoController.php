@@ -15,7 +15,8 @@ class AlumnoController extends Controller
      */
     public function index()
     {
-        //
+        $values = Alumno::with('persona')->get();
+        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades consultastes']);
     }
 
     /**
