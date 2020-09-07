@@ -25,4 +25,9 @@ class Municipio extends Model
     protected $fillable = [
         'nombre', 'nombre_completo', 'departamento_id'
     ];
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
+    }
+
 }

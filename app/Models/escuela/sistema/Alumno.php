@@ -11,6 +11,7 @@ class Alumno extends Model
 
     protected $searchable = [
         'columns' => [
+            'alumno.codigo' => 15,
             'alumno.nombre_completo' => 10,
         ]
     ];

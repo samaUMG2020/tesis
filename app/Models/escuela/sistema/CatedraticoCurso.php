@@ -18,7 +18,7 @@ class CatedraticoCurso extends Model
         'curso_g_s_id', 'catedratico_id'
     ];
 
-    public function curso()
+    public function curso_g_s()
     {
         return $this->belongsTo(CursoGS::class, 'curso_g_s_id', 'id');
     }

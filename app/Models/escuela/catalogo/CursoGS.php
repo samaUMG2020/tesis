@@ -25,4 +25,16 @@ class CursoGS extends Model
     protected $fillable = [
         'nombre_completo', 'grado_seccion_id', 'curso_id'
     ];
+
+    public function grado_seccion()
+    {
+        return $this->belongsTo(GradoSeccion::class,'grado_seccion_id', 'id');
+    }
+    public function curso()
+    {
+        return $this->belongsTo(Curso::class, 'curso_id', 'id');
+    }
+
+
 }
+

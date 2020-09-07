@@ -2,6 +2,7 @@
 
 namespace App\Models\escuela\sistema;
 
+use App\Models\escuela\catalogo\Municipio;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
@@ -26,7 +27,7 @@ class Persona extends Model
 
     protected $fillable = [
         'nombre', 'apellido', 'email', 'fecha_nacimiento', 
-        'domicilio', 'telelfono', 'municipio_id'
+        'domicilio', 'telefono', 'municipio_id'
     ];
 
     protected $casts = [
@@ -37,4 +38,10 @@ class Persona extends Model
     {
         $this->attributes['email'] = strtolower($value);
     }
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class,'minicipio_id', 'id');
+    }
+
 }

@@ -20,7 +20,7 @@ class CreatePersonaTable extends Migration
             $table->string('email')->unique();
             $table->date('fecha_nacimiento');
             $table->string('domicilio')->default('ninguna');
-            $table->string('telelfono')->default('ninguno');
+            $table->string('telefono')->default('ninguno');
             
             $table->unsignedBigInteger('municipio_id');
             $table->foreign('municipio_id')->references('id')->on('municipio');

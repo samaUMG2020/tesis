@@ -26,4 +26,10 @@ class Grado extends Model
     protected $fillable = [
         'nombre', 'nombre_completo', 'carrera_id'
     ];
+
+    public function carrera()
+    {
+        return $this->belongsTo(Carrera::class, 'carrera_id', 'id');
+    }
+   
 }

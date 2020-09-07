@@ -16,6 +16,7 @@ class CreatePagoCatedraticoTable extends Migration
         Schema::create('pago_catedratico', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->decimal("monto", 11, 2);
+            $table->year("anio");
 
             $table->unsignedBigInteger('catedratico_id');
             $table->foreign('catedratico_id')->references('id')->on('catedratico'); 
@@ -23,10 +24,7 @@ class CreatePagoCatedraticoTable extends Migration
             $table->unsignedBigInteger('mes_id');
             $table->foreign('mes_id')->references('id')->on('mes');
 
-            $table->year("anio");
-
-
-
+        
             
             $table->timestamps();
         });

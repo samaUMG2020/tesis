@@ -16,6 +16,7 @@ class CreateFondosTable extends Migration
         Schema::create('fondos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->decimal('cantidad', 11,2);
+            $table->year('anio');
 
             $table->unsignedBigInteger('tipo_fondo__id');
             $table->foreign('tipo_fondo_id')->references('id')->on('tipo_fondo');
