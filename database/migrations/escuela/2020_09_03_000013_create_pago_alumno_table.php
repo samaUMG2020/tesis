@@ -26,7 +26,7 @@ class CreatePagoAlumnoTable extends Migration
             $table->unsignedBigInteger('mes_id');
             $table->foreign('mes_id')->references('id')->on('mes');
 
-            $table->unsignedBigInteger('tipo_pago_alumno__id');
+            $table->unsignedBigInteger('tipo_pago_alumno_id');
             $table->foreign('tipo_pago_alumno_id')->references('id')->on('tipo_pago_alumno');
             
             $table->timestamps();

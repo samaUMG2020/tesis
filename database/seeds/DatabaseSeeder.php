@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
         $persona->apellido = 'hernández';
         $persona->email = 'administrador@escuela.com';
         $persona->fecha_nacimiento = '1993-01-01';
-        $persona->telelfono = '58545854';
+        $persona->telefono = '58545854';
         $persona->municipio_id = 1;
         $persona->save();
 
@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
         $persona->apellido = 'hernández';
         $persona->email = 'director@escuela.com';
         $persona->fecha_nacimiento = '1993-01-01';
-        $persona->telelfono = '58545854';
+        $persona->telefono = '58545854';
         $persona->municipio_id = 1;
         $persona->save();
 
@@ -120,7 +120,7 @@ class DatabaseSeeder extends Seeder
         $persona->apellido = 'hernández';
         $persona->email = 'secretaria@escuela.com';
         $persona->fecha_nacimiento = '1993-01-01';
-        $persona->telelfono = '58545854';
+        $persona->telefono = '58545854';
         $persona->municipio_id = 1;
         $persona->save();
 
@@ -137,7 +137,7 @@ class DatabaseSeeder extends Seeder
         $persona->apellido = 'hernández';
         $persona->email = 'catedratico@escuela.com';
         $persona->fecha_nacimiento = '1993-01-01';
-        $persona->telelfono = '58545854';
+        $persona->telefono = '58545854';
         $persona->municipio_id = 1;
         $persona->save();
 

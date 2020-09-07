@@ -36,7 +36,8 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = Alumno::create($request->all());
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -70,7 +71,11 @@ class AlumnoController extends Controller
      */
     public function update(Request $request, Alumno $alumno)
     {
-        //
+        $alumno->codigo = $request->codigo;
+        $alumno->nombre_completo = $request->nombre_completo;
+        $alumno->persona_id = $request->persona_id;
+
+        return response()->json(['Registro nuevo' => $alumno, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**

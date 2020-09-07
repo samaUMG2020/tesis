@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class BimestreController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
@@ -25,7 +25,7 @@ class BimestreController extends Controller
     public function index(Request $request)
     {
         if ($request->has('buscar'))
-        $values = Bimestre::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            $values = Bimestre::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
         else
             $values = Bimestre::orderBy('created_at', 'DESC')->paginate(10);
 

@@ -18,7 +18,7 @@ class CreateFondosTable extends Migration
             $table->decimal('cantidad', 11,2);
             $table->year('anio');
 
-            $table->unsignedBigInteger('tipo_fondo__id');
+            $table->unsignedBigInteger('tipo_fondo_id');
             $table->foreign('tipo_fondo_id')->references('id')->on('tipo_fondo');
             $table->timestamps();
         });

@@ -19,3 +19,6 @@ Route::resource('carrera', 'escuela\catalogo\CarreraController');
 Route::resource('curso', 'escuela\catalogo\CursoController');
 Route::resource('grado', 'escuela\catalogo\GradoController');
 Route::resource('seccion', 'escuela\catalogo\SeccionController');
+Route::resource('mes','escuela\catalogo\MesController');
+
+Route::resource('alumno', 'escuela\sistema\AlumnoController');
