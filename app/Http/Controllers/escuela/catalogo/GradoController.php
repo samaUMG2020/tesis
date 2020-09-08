@@ -50,7 +50,9 @@ class GradoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = Grado::create($request->all());
+
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -84,9 +86,12 @@ class GradoController extends Controller
      */
     public function update(Request $request, Grado $grado)
     {
-        //
-    }
+        $grado->nombre = $request->nombre;
+        $grado->save();
 
+        return response()->json(['Registro editado' => $grado, 'Mensaje' => 'Felicidades editates']);
+    }
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -95,6 +100,8 @@ class GradoController extends Controller
      */
     public function destroy(Grado $grado)
     {
-        //
+        $grado->delete();
+        return response()->json(['Registro eliminado' => $grado, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }
+

@@ -15,7 +15,9 @@ class CursoGSController extends Controller
      */
     public function index()
     {
-        //
+        $values = CursoGS::all();
+
+        return response()->json($values);
     }
 
     /**
@@ -36,7 +38,9 @@ class CursoGSController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = CursoGS::create($request->all());
+
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -70,7 +74,10 @@ class CursoGSController extends Controller
      */
     public function update(Request $request, CursoGS $cursoGS)
     {
-        //
+        $cursoGS->nombre = $request->nombre;
+        $cursoGS->save();
+
+        return response()->json(['Registro editado' => $cursoGS, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
@@ -81,6 +88,7 @@ class CursoGSController extends Controller
      */
     public function destroy(CursoGS $cursoGS)
     {
-        //
+        $cursoGS->delete();
+        return response()->json(['Registro eliminado' => $cursoGS, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }

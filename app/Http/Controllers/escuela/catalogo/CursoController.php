@@ -39,7 +39,7 @@ class CursoController extends Controller
      */
     public function create()
     {
-        //
+       
     }
 
     /**
@@ -50,7 +50,9 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = Curso::create($request->all());
+
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -84,7 +86,10 @@ class CursoController extends Controller
      */
     public function update(Request $request, Curso $curso)
     {
-        //
+        $curso->nombre = $request->nombre;
+        $curso->save();
+
+        return response()->json(['Registro editado' => $curso, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
@@ -95,6 +100,7 @@ class CursoController extends Controller
      */
     public function destroy(Curso $curso)
     {
-        //
+        $curso->delete();
+        return response()->json(['Registro eliminado' => $curso, 'Mensaje' => 'Felicidades elimnaste']); 
     }
 }

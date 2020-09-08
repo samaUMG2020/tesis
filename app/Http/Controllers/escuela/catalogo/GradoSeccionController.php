@@ -15,7 +15,9 @@ class GradoSeccionController extends Controller
      */
     public function index()
     {
-        //
+        $values = GradoSeccion::all();
+
+        return response()->json($values);
     }
 
     /**
@@ -36,7 +38,9 @@ class GradoSeccionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = GradoSeccion::create($request->all());
+
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -70,7 +74,10 @@ class GradoSeccionController extends Controller
      */
     public function update(Request $request, GradoSeccion $gradoSeccion)
     {
-        //
+        $gradoSeccion->nombre = $request->nombre;
+        $gradoSeccion->save();
+
+        return response()->json(['Registro editado' => $gradoSeccion, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
@@ -81,6 +88,7 @@ class GradoSeccionController extends Controller
      */
     public function destroy(GradoSeccion $gradoSeccion)
     {
-        //
+        $gradoSeccion->delete();
+        return response()->json(['Registro eliminado' => $gradoSeccion, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }
