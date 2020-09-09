@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\escuela\catalogo;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Grado;
 use App\Models\escuela\catalogo\GradoSeccion;
+use App\Models\escuela\catalogo\Seccion;
 use Illuminate\Http\Request;
 
 class GradoSeccionController extends Controller
@@ -15,7 +17,7 @@ class GradoSeccionController extends Controller
      */
     public function index()
     {
-        $values = GradoSeccion::all();
+        $values = GradoSeccion::get();
 
         return response()->json($values);
     }
@@ -38,9 +40,16 @@ class GradoSeccionController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = GradoSeccion::create($request->all());
+        $grado = Grado::find($request->grado_id);
+        $seccion = Seccion::find($request->seccion_id);
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        $insert = new GradoSeccion();
+        $insert->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
+        $insert->seccion_id = $request->seccion_id;
+        $insert->grado_id = $request->grado_id;
+        $insert->save();
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -74,7 +83,12 @@ class GradoSeccionController extends Controller
      */
     public function update(Request $request, GradoSeccion $gradoSeccion)
     {
-        $gradoSeccion->nombre = $request->nombre;
+        $grado = Grado::find($request->grado_id); //100
+        $seccion = Seccion::find($request->seccion_id); //1
+
+        $gradoSeccion->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
+        $gradoSeccion->seccion_id = $request->seccion_id;
+        $gradoSeccion->grado_id = $request->grado_id;
         $gradoSeccion->save();
 
         return response()->json(['Registro editado' => $gradoSeccion, 'Mensaje' => 'Felicidades editates']);

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\escuela\catalogo;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Curso;
 use App\Models\escuela\catalogo\CursoGS;
+use App\Models\escuela\catalogo\GradoSeccion;
 use Illuminate\Http\Request;
 
 class CursoGSController extends Controller
@@ -15,7 +17,7 @@ class CursoGSController extends Controller
      */
     public function index()
     {
-        $values = CursoGS::all();
+        $values = CursoGS::with('grado_seccion.grado.carrera', 'curso', 'grado_seccion.seccion')->get();
 
         return response()->json($values);
     }
@@ -38,9 +40,16 @@ class CursoGSController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = CursoGS::create($request->all());
+        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
+        $curso = Curso::find($request->curso_id);
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        $insert = new CursoGS();
+        $insert->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
+        $insert->grado_seccion_id = $request->grado_seccion_id;
+        $insert->curso_id = $request->curso_id;
+        $insert->save();
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -69,15 +78,20 @@ class CursoGSController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
+     * @param  \App\Models\escuela\catalogo\CursoGS  $cursoG
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CursoGS $cursoGS)
+    public function update(Request $request, CursoGS $cursoG)
     {
-        $cursoGS->nombre = $request->nombre;
-        $cursoGS->save();
+        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
+        $curso = Curso::find($request->curso_id);
 
-        return response()->json(['Registro editado' => $cursoGS, 'Mensaje' => 'Felicidades editates']);
+        $cursoG->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
+        $cursoG->grado_seccion_id = $request->grado_seccion_id;
+        $cursoG->curso_id = $request->curso_id;
+        $cursoG->save();
+
+        return response()->json(['Registro editado' => $cursoG, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
@@ -86,9 +100,9 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CursoGS $cursoGS)
+    public function destroy(CursoGS $cursoG)
     {
-        $cursoGS->delete();
-        return response()->json(['Registro eliminado' => $cursoGS, 'Mensaje' => 'Felicidades elimnaste']);
+        $cursoG->delete();
+        return response()->json(['Registro eliminado' => $cursoG, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }
