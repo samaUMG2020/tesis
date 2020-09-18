@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\escuela\catalogo;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Carrera;
 use App\Models\escuela\catalogo\Grado;
 use Illuminate\Http\Request;
 
 class GradoController extends Controller
 {
-    public function __construct()
+   /* public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
         $this->middleware('secretaria');
         $this->middleware('catedratico');
-    }
+    }*/
 
     /**
      * Display a listing of the resource.
@@ -50,9 +51,17 @@ class GradoController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Grado::create($request->all());
+        $carrera = Carrera::find($request->carrera_id);
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        $insert = new Grado();
+        $insert->nombre= $request->nombre;
+        $insert->nombre_completo = "{$carrera->nombre_completo}";
+        $insert->carrera_id = $request->carrera_id;
+        $insert->save();
+
+       //$dato = Grado::create($request->all());
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -86,7 +95,11 @@ class GradoController extends Controller
      */
     public function update(Request $request, Grado $grado)
     {
+        $carrera = Carrera::find($request->carrera_id);
+
         $grado->nombre = $request->nombre;
+        $grado->nombre_completo= "{$carrera->nombre_completo}";
+        $grado->carrera_id = $request->carrera_id;
         $grado->save();
 
         return response()->json(['Registro editado' => $grado, 'Mensaje' => 'Felicidades editates']);

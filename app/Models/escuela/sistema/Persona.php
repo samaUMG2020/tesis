@@ -41,7 +41,7 @@ class Persona extends Model
 
     public function municipio()
     {
-        return $this->belongsTo(Municipio::class,'minicipio_id', 'id');
+        return $this->belongsTo(Municipio::class,'municipio_id', 'id');
     }
 
 }

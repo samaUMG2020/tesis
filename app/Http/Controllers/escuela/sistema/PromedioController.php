@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\escuela\seguridad;
+namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
-use App\Models\escuela\seguridad\Rol;
+use App\Models\escuela\sistema\Promedio;
 use Illuminate\Http\Request;
 
-class RolController extends Controller
+class PromedioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class RolController extends Controller
      */
     public function index()
     {
-        $values = Rol::with('curso')->get();
+        $values = Promedio::with('curso')->get();
 
         return response()->json($values);
     }
@@ -38,7 +38,7 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Rol::create($request->all());
+        $dato = Promedio::create($request->all());
 
         return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
@@ -46,10 +46,10 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\Promedio  $promedio
      * @return \Illuminate\Http\Response
      */
-    public function show(Rol $rol)
+    public function show(Promedio $promedio)
     {
         //
     }
@@ -57,10 +57,10 @@ class RolController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\Promedio  $promedio
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rol $rol)
+    public function edit(Promedio $promedio)
     {
         //
     }
@@ -69,26 +69,26 @@ class RolController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\Promedio  $promedio
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rol $rol)
+    public function update(Request $request, Promedio $promedio)
     {
-        $rol->nombre = $request->nombre;
-        $rol->save();
+        $promedio->nombre = $request->nombre;
+        $promedio->save();
 
-        return response()->json(['Registro editado' => $rol, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $promedio, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\Promedio  $promedio
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+    public function destroy(Promedio $promedio)
     {
-        $rol->delete();
-        return response()->json(['Registro eliminado' => $rol, 'Mensaje' => 'Felicidades elimnaste']);
+        $promedio->delete();
+        return response()->json(['Registro eliminado' => $promedio, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }

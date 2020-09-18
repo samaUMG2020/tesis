@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\escuela\seguridad;
+namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
-use App\Models\escuela\seguridad\Rol;
+use App\Models\escuela\sistema\PagoAlumno;
 use Illuminate\Http\Request;
 
-class RolController extends Controller
+class PagoAlumnoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class RolController extends Controller
      */
     public function index()
     {
-        $values = Rol::with('curso')->get();
+        $values = PagoAlumno::get();
 
         return response()->json($values);
     }
@@ -27,7 +27,7 @@ class RolController extends Controller
      */
     public function create()
     {
-        //
+    
     }
 
     /**
@@ -38,18 +38,20 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Rol::create($request->all());
-
+        $dato = PagoAlumno::create($request->all());
+        
         return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+         //monto', 'alumno_id', 'grado_id', 'mes_id', 'tipo_pago_alumno_id
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\PagoAlumno  $pagoAlumno
      * @return \Illuminate\Http\Response
      */
-    public function show(Rol $rol)
+    public function show(PagoAlumno $pagoAlumno)
     {
         //
     }
@@ -57,10 +59,10 @@ class RolController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\PagoAlumno  $pagoAlumno
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rol $rol)
+    public function edit(PagoAlumno $pagoAlumno)
     {
         //
     }
@@ -69,26 +71,26 @@ class RolController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\PagoAlumno  $pagoAlumno
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rol $rol)
-    {
-        $rol->nombre = $request->nombre;
-        $rol->save();
+    public function update(Request $request, PagoAlumno $pagoAlumno)
+    { 
+        $pagoAlumno->nombre = $request->nombre;
+        $pagoAlumno->save();
 
-        return response()->json(['Registro editado' => $rol, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $pagoAlumno, 'Mensaje' => 'Felicidades editates']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\sistema\PagoAlumno  $pagoAlumno
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+    public function destroy(PagoAlumno $pagoAlumno)
     {
-        $rol->delete();
-        return response()->json(['Registro eliminado' => $rol, 'Mensaje' => 'Felicidades elimnaste']);
+        $pagoAlumno->delete();
+        return response()->json(['Registro eliminado' => $pagoAlumno, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }

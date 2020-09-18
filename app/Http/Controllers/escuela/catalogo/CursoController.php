@@ -8,21 +8,22 @@ use Illuminate\Http\Request;
 
 class CursoController extends Controller
 {
-    public function __construct()
+   /* public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
         $this->middleware('secretaria');
         $this->middleware('catedratico');
-    }
+    }*/
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+      
+       public function index(Request $request)
     {
         if ($request->has('buscar'))
             $values = Curso::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
@@ -30,6 +31,8 @@ class CursoController extends Controller
             $values = Curso::orderBy('created_at', 'DESC')->paginate(10);
 
         return view('escuela.catalogo.curso.index', compact('values'));
+        
+    
     }
 
     /**

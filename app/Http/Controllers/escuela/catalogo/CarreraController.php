@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CarreraController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
@@ -16,7 +16,7 @@ class CarreraController extends Controller
         $this->middleware('secretaria');
         $this->middleware('catedratico');
     }
-
+*/
     /**
      * Display a listing of the resource.
      *

@@ -17,7 +17,7 @@ class CursoGSController extends Controller
      */
     public function index()
     {
-        $values = CursoGS::with('grado_seccion.grado.carrera', 'curso', 'grado_seccion.seccion')->get();
+        $values = CursoGS::with('grado_seccion.grado.carrera', 'grado_seccion.seccion','curso')->get();
 
         return response()->json($values);
     }
@@ -40,11 +40,11 @@ class CursoGSController extends Controller
      */
     public function store(Request $request)
     {
-        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
+        $gradoSeccion = GradoSeccion::find($request->grado_seccion_id);
         $curso = Curso::find($request->curso_id);
 
         $insert = new CursoGS();
-        $insert->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
+        $insert->nombre_completo = "{$gradoSeccion->nombre_completo}, {$curso->nombre}";
         $insert->grado_seccion_id = $request->grado_seccion_id;
         $insert->curso_id = $request->curso_id;
         $insert->save();

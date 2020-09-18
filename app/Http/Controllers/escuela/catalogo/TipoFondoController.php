@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\escuela\seguridad;
+namespace App\Http\Controllers\escuela\catalogo;
 
 use App\Http\Controllers\Controller;
-use App\Models\escuela\seguridad\Rol;
+use App\Models\escuela\catalogo\TipoFondo;
 use Illuminate\Http\Request;
 
-class RolController extends Controller
+class TipoFondoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,9 @@ class RolController extends Controller
      */
     public function index()
     {
-        $values = Rol::with('curso')->get();
+        $values = TipoFondo::get();
+        return response($values);
 
-        return response()->json($values);
     }
 
     /**
@@ -38,7 +38,8 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Rol::create($request->all());
+    
+        $dato = TipoFondo::create($request->all());
 
         return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
     }
@@ -46,10 +47,10 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\catalogo\TipoFondo  $tipoFondo
      * @return \Illuminate\Http\Response
      */
-    public function show(Rol $rol)
+    public function show(TipoFondo $tipoFondo)
     {
         //
     }
@@ -57,10 +58,10 @@ class RolController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\catalogo\TipoFondo  $tipoFondo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rol $rol)
+    public function edit(TipoFondo $tipoFondo)
     {
         //
     }
@@ -69,26 +70,26 @@ class RolController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\catalogo\TipoFondo  $tipoFondo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rol $rol)
+    public function update(Request $request, TipoFondo $tipoFondo)
     {
-        $rol->nombre = $request->nombre;
-        $rol->save();
+        $tipoFondo->nombre = $request->nombre;
+        $tipoFondo->save();
 
-        return response()->json(['Registro editado' => $rol, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro nuevo' => $tipoFondo, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\escuela\seguridad\Rol  $rol
+     * @param  \App\Models\escuela\catalogo\TipoFondo  $tipoFondo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+    public function destroy(TipoFondo $tipoFondo)
     {
-        $rol->delete();
-        return response()->json(['Registro eliminado' => $rol, 'Mensaje' => 'Felicidades elimnaste']);
+        $tipoFondo->delete();
+        return response()->json(['Registro eliminado' => $tipoFondo, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }

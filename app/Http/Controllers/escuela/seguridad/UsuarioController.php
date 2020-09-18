@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\escuela\seguridad;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\seguridad\Rol;
 use App\Models\escuela\seguridad\Usuario;
+use App\Models\escuela\sistema\Persona;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
@@ -15,7 +17,8 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        //
+        $values = Usuario::get();
+        return response()->json($values);
     }
 
     /**
@@ -36,7 +39,16 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $persona = Persona::find($request->grado_seccion_id);
+        $rol = Rol::find($request->curso_id);
+
+        $insert = new Usuario();
+        $insert->nombre_completo = "{$persona->nombre_completo}, {$rol->nombre}";
+        $insert->persona_id = $request->persona_id;
+        $insert->rol_id = $request->rol_id;
+        $insert->save();
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
     }
 
     /**
@@ -70,7 +82,16 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, Usuario $usuario)
     {
-        //
+        $persona = Persona::find($request->persona_id);
+        $rol = Rol::find($request->rol_id);
+
+        $usuario->nombre_completo = "{$persona->nombre_completo}, {$rol->nombre}";
+        $usuario->persona_id = $request->persona_id;
+        $usuario->rol_id = $request->rol_id;
+        $usuario->save();
+
+        return response()->json(['Registro nuevo' => $usuario, 'Mensaje' => 'Felicidades insertastes']);
+    
     }
 
     /**
@@ -81,6 +102,8 @@ class UsuarioController extends Controller
      */
     public function destroy(Usuario $usuario)
     {
-        //
+        $usuario->delete();
+        return response()->json(['Registro eliminado' => $usuario, 'Mensaje' => 'Felicidades elimnaste']);
+  
     }
 }

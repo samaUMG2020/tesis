@@ -4,6 +4,8 @@ namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
 use App\Models\escuela\sistema\Catedratico;
+use App\Models\escuela\sistema\Persona;
+use Faker\Provider\ar_JO\Person;
 use Illuminate\Http\Request;
 
 class CatedraticoController extends Controller
@@ -15,7 +17,9 @@ class CatedraticoController extends Controller
      */
     public function index()
     {
-        //
+        $values = Catedratico::with('persona.municipio')->get();
+
+        return response()->json($values);
     }
 
     /**
@@ -36,7 +40,16 @@ class CatedraticoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $persona = Persona::find($request->persona_id) ; 
+
+        $insert =new Catedratico();
+        $insert->codigo = $request->codigo;
+        $insert->nombre_completo = "{$persona->nombre}{$persona->apellido} "; 
+        $insert->persona_id = $request->persona_id;
+        $insert->save();
+
+        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades editates']);
+
     }
 
     /**
@@ -70,7 +83,15 @@ class CatedraticoController extends Controller
      */
     public function update(Request $request, Catedratico $catedratico)
     {
-        //
+        $persona = Persona::find($request->persona_id) ; 
+
+        $catedratico->codigo = $request->codigo;
+        $catedratico->nombre_completo = "{$persona->nombre}{$persona->apellido} "; 
+        $catedratico->persona_id = $request->persona_id;
+        $catedratico->save();
+
+        return response()->json(['Registro ingresado' => $catedratico, 'Mensaje' => 'Felicidades ingresaste']);
+
     }
 
     /**
@@ -81,6 +102,7 @@ class CatedraticoController extends Controller
      */
     public function destroy(Catedratico $catedratico)
     {
-        //
+        $catedratico->delete();
+        return response()->json(['Registro eliminado' => $catedratico, 'Mensaje' => 'Felicidades elimnaste']);  
     }
 }

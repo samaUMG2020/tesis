@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 
 class SeccionController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
         $this->middleware('secretaria');
         $this->middleware('catedratico');
-    }
+    }*/
 
     /**
      * Display a listing of the resource.

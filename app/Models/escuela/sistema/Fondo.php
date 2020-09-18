@@ -15,7 +15,7 @@ class Fondo extends Model
      */
 
      protected $fillable = [
-         'cantiadad', 'tipo_fondo_id', 'anio'
+         'cantidad', 'tipo_fondo_id', 'anio'
     ];
 
     public function tipo_fondo()

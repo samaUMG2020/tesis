@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Municipio;
 use App\Models\escuela\sistema\Persona;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,9 @@ class PersonaController extends Controller
      */
     public function index()
     {
-        //
+        $values = Persona::with('municipio')->get();
+
+        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades Consultaste']);
     }
 
     /**
@@ -36,7 +39,26 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $municipio = Municipio::find($request->municipio_id);
+
+        $insert = new Persona();
+    
+        $insert ->nombre= $request->nombre;
+        $insert ->apellido= $request->apellido;
+        $insert ->email= $request->email;
+        $insert ->fecha_nacimiento= $request->fecha_nacimiento;
+        $insert ->domicilio= $request->domicilio;
+        $insert ->telefono= $request->telefono;
+        $insert ->municipio_id= $request->municipio_id;
+        $insert->save();
+
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+
+/*$dato = Persona::create($request->all());
+
+return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades registraste']);
+*/
     }
 
     /**
@@ -70,7 +92,22 @@ class PersonaController extends Controller
      */
     public function update(Request $request, Persona $persona)
     {
-        //
+        $municipio = Municipio::find($request->municipio_id);
+
+        $persona->nombre = "{$municipio->nombre}";
+        $persona ->nombre= $request->nombre;
+        $persona ->apellido= $request->apellido;
+        $persona ->email= $request->email;
+        $persona ->fecha_nacimiento= $request->fecha_nacimiento;
+        $persona ->domicilio= $request->domicilio;
+        $persona ->telefono= $request->telefono;
+        $persona ->municipio_id= $request->municipio_id;
+        $persona->save();
+
+
+        return response()->json(['Registro nuevo' => $persona, 'Mensaje' => 'Felicidades insertastes']);
+
+        //return response()->json(['Registro editado' => $persona, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -81,6 +118,7 @@ class PersonaController extends Controller
      */
     public function destroy(Persona $persona)
     {
-        //
+        $persona->delete();
+        return response()->json(['Registro eliminado' => $persona, 'Mensaje' => 'Felicidades elimnaste']);
     }
 }
