@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Grado;
+use App\Models\escuela\catalogo\Mes;
+use App\Models\escuela\catalogo\TipoPagoAlumno;
+use App\Models\escuela\sistema\Alumno;
 use App\Models\escuela\sistema\PagoAlumno;
 use Illuminate\Http\Request;
 
@@ -38,10 +42,21 @@ class PagoAlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = PagoAlumno::create($request->all());
+        $alumno = Alumno::find($request->alumno_id);
+        $grado = Grado::find($request->grado_id);
+        $mes = Mes::find($request->mes_id);
+        $tipoPagoAlumno =TipoPagoAlumno::find($request->tipo_pago_alumno_id);
+
+        $insert = new PagoAlumno();
+        $insert ->monto = $request->monto;
+        $insert ->alumno_id = $request->alumno_id;
+        $insert ->grado_id = $request->grado_id;
+        $insert ->mes_id = $request->mes_id; //EL MISMO ALUMNO PUEDE PAGAR EL MISMO MES MAS DE UNA VEZ
+        $insert ->tipo_pago_alumno_id = $request->tipo_pago_alumno_id;
+        $insert->save();
         
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
-         //monto', 'alumno_id', 'grado_id', 'mes_id', 'tipo_pago_alumno_id
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+        
 
     }
 
@@ -76,10 +91,20 @@ class PagoAlumnoController extends Controller
      */
     public function update(Request $request, PagoAlumno $pagoAlumno)
     { 
-        $pagoAlumno->nombre = $request->nombre;
+        $alumno = Alumno::find($request->alumno_id);
+        $grado = Grado::find($request->grado_id);
+        $mes = Mes::find($request->mes_id);
+        $tipoPagoAlumno =TipoPagoAlumno::find($request->tipo_pago_alumno_id);
+    
+        $pagoAlumno ->monto = $request->monto;
+        $pagoAlumno ->alumno_id = $request->alumno_id;
+        $pagoAlumno ->grado_id = $request->grado_id;
+        $pagoAlumno ->mes_id = $request->mes_id;
+        $pagoAlumno ->tipo_pago_alumno_id = $request->tipo_pago_alumno_id;
         $pagoAlumno->save();
-
-        return response()->json(['Registro editado' => $pagoAlumno, 'Mensaje' => 'Felicidades editates']);
+        
+        return response()->json(['Registro nuevo' => $pagoAlumno, 'Mensaje' => 'Felicidades editaste']);
+    
     }
 
     /**
@@ -91,6 +116,6 @@ class PagoAlumnoController extends Controller
     public function destroy(PagoAlumno $pagoAlumno)
     {
         $pagoAlumno->delete();
-        return response()->json(['Registro eliminado' => $pagoAlumno, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $pagoAlumno, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

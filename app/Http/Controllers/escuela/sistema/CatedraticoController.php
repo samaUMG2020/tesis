@@ -48,7 +48,7 @@ class CatedraticoController extends Controller
         $insert->persona_id = $request->persona_id;
         $insert->save();
 
-        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades ingresaste']);
 
     }
 
@@ -90,7 +90,7 @@ class CatedraticoController extends Controller
         $catedratico->persona_id = $request->persona_id;
         $catedratico->save();
 
-        return response()->json(['Registro ingresado' => $catedratico, 'Mensaje' => 'Felicidades ingresaste']);
+        return response()->json(['Registro ingresado' => $catedratico, 'Mensaje' => 'Felicidades editaste']);
 
     }
 
@@ -103,6 +103,6 @@ class CatedraticoController extends Controller
     public function destroy(Catedratico $catedratico)
     {
         $catedratico->delete();
-        return response()->json(['Registro eliminado' => $catedratico, 'Mensaje' => 'Felicidades elimnaste']);  
+        return response()->json(['Registro eliminado' => $catedratico, 'Mensaje' => 'Felicidades eliminaste']);  
     }
 }

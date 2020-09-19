@@ -39,7 +39,7 @@ class DepartamentoController extends Controller
     {
        $dato = Departamento::create($request->all());
 
-        return response()->json([ 'Registro nuevo'=> $dato, 'Mensaje' =>'Felicidades insertastes']);
+        return response()->json([ 'Registro nuevo'=> $dato, 'Mensaje' =>'Felicidades insertaste']);
 
     }
 

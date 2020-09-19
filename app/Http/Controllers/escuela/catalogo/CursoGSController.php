@@ -49,7 +49,7 @@ class CursoGSController extends Controller
         $insert->curso_id = $request->curso_id;
         $insert->save();
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -91,7 +91,7 @@ class CursoGSController extends Controller
         $cursoG->curso_id = $request->curso_id;
         $cursoG->save();
 
-        return response()->json(['Registro editado' => $cursoG, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $cursoG, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -103,6 +103,6 @@ class CursoGSController extends Controller
     public function destroy(CursoGS $cursoG)
     {
         $cursoG->delete();
-        return response()->json(['Registro eliminado' => $cursoG, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $cursoG, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

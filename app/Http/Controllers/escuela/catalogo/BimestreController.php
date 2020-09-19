@@ -52,7 +52,7 @@ class BimestreController extends Controller
     {
         $dato = Bimestre::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -89,7 +89,7 @@ class BimestreController extends Controller
         $bimestre->nombre = $request->nombre;
         $bimestre->save();
 
-        return response()->json(['Registro editado' => $bimestre, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $bimestre, 'Mensaje' => 'Felicidades editate']);
     }
 
     /**
@@ -101,6 +101,6 @@ class BimestreController extends Controller
     public function destroy(Bimestre $bimestre)
     {
         $bimestre->delete();
-        return response()->json(['Registro eliminado' => $bimestre, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $bimestre, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

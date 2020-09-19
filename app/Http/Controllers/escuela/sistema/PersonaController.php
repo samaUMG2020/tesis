@@ -53,7 +53,7 @@ class PersonaController extends Controller
         $insert->save();
 
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
 
 /*$dato = Persona::create($request->all());
 
@@ -94,7 +94,6 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
     {
         $municipio = Municipio::find($request->municipio_id);
 
-        $persona->nombre = "{$municipio->nombre}";
         $persona ->nombre= $request->nombre;
         $persona ->apellido= $request->apellido;
         $persona ->email= $request->email;
@@ -103,9 +102,9 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
         $persona ->telefono= $request->telefono;
         $persona ->municipio_id= $request->municipio_id;
         $persona->save();
+       
 
-
-        return response()->json(['Registro nuevo' => $persona, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $persona, 'Mensaje' => 'Felicidades editaste']);
 
         //return response()->json(['Registro editado' => $persona, 'Mensaje' => 'Felicidades editaste']);
     }
@@ -119,6 +118,6 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
     public function destroy(Persona $persona)
     {
         $persona->delete();
-        return response()->json(['Registro eliminado' => $persona, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $persona, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

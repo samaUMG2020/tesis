@@ -19,7 +19,7 @@ class AlumnoGradoController extends Controller
     {
         //$values = AlumnoGrado::with('grado_seccion.grado.carrera', 'alumno', 'grado_seccion.seccion')->get();
         $values = AlumnoGrado::get();
-        return response()->json($values);
+        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades Consultaste']);
     }
 
     /**
@@ -47,8 +47,8 @@ class AlumnoGradoController extends Controller
         $insert->anio = $request->anio;
         $insert->grado_seccion_id = $request->grado_seccion_id;
         $insert->alumno_id = $request->alumno_id;
-
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        $insert->save();
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -88,8 +88,8 @@ class AlumnoGradoController extends Controller
         $alumnoGrado->anio = $request->anio;
         $alumnoGrado->grado_seccion_id = $request->grado_seccion_id;
         $alumnoGrado->alumno_id = $request->alumno_id;
-
-        return response()->json(['Registro editado' => $alumnoGrado, 'Mensaje' => 'Felicidades editates']);
+        $alumnoGrado->save();
+        return response()->json(['Registro editado' => $alumnoGrado, 'Mensaje' => 'Felicidades editate']);
     }
 
     /**
@@ -101,6 +101,6 @@ class AlumnoGradoController extends Controller
     public function destroy(AlumnoGrado $alumnoGrado)
     {
         $alumnoGrado->delete();
-        return response()->json(['Registro eliminado' => $alumnoGrado, 'Mensaje' => 'Felicidades elimnaste']);  
+        return response()->json(['Registro eliminado' => $alumnoGrado, 'Mensaje' => 'Felicidades eliminaste']);  
       }
 }

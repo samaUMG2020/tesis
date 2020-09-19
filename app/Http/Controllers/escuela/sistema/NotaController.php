@@ -43,11 +43,8 @@ class NotaController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Nota::create($request->all());
-
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
-       
-        /*$alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
+    
+        $alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
         $curso = Curso::find($request->curso_id); 
         $bimestre = Bimestre::find($request->bimestre_id);
 
@@ -59,8 +56,8 @@ class NotaController extends Controller
         $insert->alumno_grado_id = $request->alumno_grado_id;
         $insert->save();
 
-        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades editates']);
-*/
+        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades Ingresaste']);
+
     }
 
     /**
@@ -94,11 +91,7 @@ class NotaController extends Controller
      */
     public function update(Request $request, Nota $nota)
     {
-        $nota->nombre = $request->nombre;
-        $nota->save();
-
-        return response()->json(['Registro editado' => $nota, 'Mensaje' => 'Felicidades editates']);
-        /*$alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
+        $alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
         $curso = Curso::find($request->curso_id); 
         $bimestre = Bimestre::find($request->bimestre_id);
 
@@ -108,9 +101,9 @@ class NotaController extends Controller
         $nota->curso_id = $request->curso_id;
         $nota->bimestre_id = $request->bimestre_id;
         $nota->alumno_grado_id = $request->alumno_grado_id;
-        $nota->save();*/
+        $nota->save();
 
-        return response()->json(['Registro editado' => $nota, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $nota, 'Mensaje' => 'Felicidades editaste']);
 
     }
 
@@ -123,6 +116,6 @@ class NotaController extends Controller
     public function destroy(Nota $nota)
     {
         $nota->delete();
-        return response()->json(['Registro eliminado' => $nota, 'Mensaje' => 'Felicidades elimnaste']);  
+        return response()->json(['Registro eliminado' => $nota, 'Mensaje' => 'Felicidades eliminaste']);  
     }
 }

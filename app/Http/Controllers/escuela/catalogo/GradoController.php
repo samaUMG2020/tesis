@@ -26,9 +26,9 @@ class GradoController extends Controller
     public function index(Request $request)
     {
         if ($request->has('buscar'))
-            $values = Grado::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            $values = Grado::search($request->buscar)->orderBy('id', 'DESC')->paginate(10);
         else
-            $values = Grado::orderBy('created_at', 'DESC')->paginate(10);
+            $values = Grado::orderBy('id', 'DESC')->paginate(10);
 
         return view('escuela.catalogo.grado.index', compact('values'));
     }
@@ -61,7 +61,7 @@ class GradoController extends Controller
 
        //$dato = Grado::create($request->all());
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -93,8 +93,9 @@ class GradoController extends Controller
      * @param  \App\Models\escuela\catalogo\Grado  $grado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Grado $grado)
+    public function update(Request $request, Grado $grado) 
     {
+        //NO PROBE ESTA FUNCION 
         $carrera = Carrera::find($request->carrera_id);
 
         $grado->nombre = $request->nombre;
@@ -102,7 +103,7 @@ class GradoController extends Controller
         $grado->carrera_id = $request->carrera_id;
         $grado->save();
 
-        return response()->json(['Registro editado' => $grado, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $grado, 'Mensaje' => 'Felicidades editaste']);
     }
     
     /**

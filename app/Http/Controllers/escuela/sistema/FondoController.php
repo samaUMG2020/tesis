@@ -38,18 +38,16 @@ class FondoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $tipoFondo = TipoFondo::find($request->tipoFondo_id) ; 
+    { 
 
-        $insert =new Fondo();
-        $insert->nombre = "{$tipoFondo->nombre} "; 
+        $insert =new Fondo(); 
         $insert->cantidad = $request->cantidad;
         $insert->anio = $request->anio;
-        $insert->tipoFondo = $request->tipoFondo_id;
+        $insert->tipo_fondo_id = $request->tipo_fondo_id;
        
         $insert->save();
 
-        return response()->json(['Registro editado' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+        return response()->json(['Registro ingresado' => $insert, 'Mensaje' => 'Felicidades insertaste']);
 
     }
 
@@ -83,14 +81,13 @@ class FondoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Fondo $fondo)
-    {
-        $tipoFondo = TipoFondo::find($request->tipoFondo_id) ; 
+    { 
+        $fondo->cantidad = $request->cantidad;
+        $fondo->anio = $request->anio;
+        $fondo->tipo_fondo_id = $request->tipo_fondo_id;
+        $fondo->save();
 
-        $tipoFondo->nombre = "{$tipoFondo->nombre} "; 
-        $tipoFondo->tipoFondo = $request->tipoFondo_id;
-        $tipoFondo->save();
-
-        return response()->json(['Registro editado' => $tipoFondo, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $fondo, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -102,6 +99,6 @@ class FondoController extends Controller
     public function destroy(Fondo $fondo)
     {
         $fondo->delete();
-        return response()->json(['Registro eliminado' => $fondo, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $fondo, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

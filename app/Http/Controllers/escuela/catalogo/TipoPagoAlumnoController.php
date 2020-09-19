@@ -41,7 +41,7 @@ class TipoPagoAlumnoController extends Controller
     {
         $dato =TipoPagoAlumno::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -78,7 +78,7 @@ class TipoPagoAlumnoController extends Controller
         $tipoPagoAlumno->nombre = $request->nombre;
         $tipoPagoAlumno->save();
 
-        return response()->json(['Registro editado' => $tipoPagoAlumno, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $tipoPagoAlumno, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -91,6 +91,6 @@ class TipoPagoAlumnoController extends Controller
     {
         $tipoPagoAlumno->delete();
 
-        return response()->json(['Registro eliminado' => $tipoPagoAlumno, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $tipoPagoAlumno, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

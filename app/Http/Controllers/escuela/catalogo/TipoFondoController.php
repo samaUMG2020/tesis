@@ -41,7 +41,7 @@ class TipoFondoController extends Controller
     
         $dato = TipoFondo::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -78,7 +78,7 @@ class TipoFondoController extends Controller
         $tipoFondo->nombre = $request->nombre;
         $tipoFondo->save();
 
-        return response()->json(['Registro nuevo' => $tipoFondo, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $tipoFondo, 'Mensaje' => 'Felicidades actualizaste']);
     }
 
     /**
@@ -90,6 +90,6 @@ class TipoFondoController extends Controller
     public function destroy(TipoFondo $tipoFondo)
     {
         $tipoFondo->delete();
-        return response()->json(['Registro eliminado' => $tipoFondo, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $tipoFondo, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

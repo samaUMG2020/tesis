@@ -94,7 +94,7 @@ class CatedraticoCursoController extends Controller
         $catedraticoCurso->catedratico_id = $request->catedratico_id;
         $catedraticoCurso->save();
 
-        return response()->json(['Registro editado' => $catedraticoCurso, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $catedraticoCurso, 'Mensaje' => 'Felicidades editaste']);
 
     }
 
@@ -107,6 +107,6 @@ class CatedraticoCursoController extends Controller
     public function destroy(CatedraticoCurso $catedraticoCurso)
     {
         $catedraticoCurso->delete();
-        return response()->json(['Registro eliminado' => $catedraticoCurso, 'Mensaje' => 'Felicidades elimnaste']);  
+        return response()->json(['Registro eliminado' => $catedraticoCurso, 'Mensaje' => 'Felicidades eliminaste']);  
     }
 }

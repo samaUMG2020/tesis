@@ -47,7 +47,7 @@ class MesController extends Controller
 
         $dato = Mes::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -84,7 +84,7 @@ class MesController extends Controller
         $me->nombre = $request->nombre;
         $me->save();
 
-        return response()->json(['Registro editado' => $me, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $me, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -96,6 +96,6 @@ class MesController extends Controller
     public function destroy(Mes $me)
     {
         $me->delete();
-        return response()->json(['Registro eliminado' => $me, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $me, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

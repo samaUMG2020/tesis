@@ -101,6 +101,6 @@ class CarreraController extends Controller
     public function destroy(Carrera $carrera)
     {
         $carrera->delete();
-        return response()->json(['Registro eliminado' => $carrera, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $carrera, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

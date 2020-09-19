@@ -15,7 +15,7 @@ class RolController extends Controller
      */
     public function index()
     {
-        $values = Rol::with('curso')->get();
+        $values = Rol::get();
 
         return response()->json($values);
     }
@@ -40,7 +40,7 @@ class RolController extends Controller
     {
         $dato = Rol::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -77,7 +77,7 @@ class RolController extends Controller
         $rol->nombre = $request->nombre;
         $rol->save();
 
-        return response()->json(['Registro editado' => $rol, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $rol, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -89,6 +89,6 @@ class RolController extends Controller
     public function destroy(Rol $rol)
     {
         $rol->delete();
-        return response()->json(['Registro eliminado' => $rol, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $rol, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

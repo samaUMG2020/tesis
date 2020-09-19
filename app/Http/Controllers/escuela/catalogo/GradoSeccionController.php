@@ -49,7 +49,7 @@ class GradoSeccionController extends Controller
         $insert->grado_id = $request->grado_id;
         $insert->save();
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -91,7 +91,7 @@ class GradoSeccionController extends Controller
         $gradoSeccion->grado_id = $request->grado_id;
         $gradoSeccion->save();
 
-        return response()->json(['Registro editado' => $gradoSeccion, 'Mensaje' => 'Felicidades editates']);
+        return response()->json(['Registro editado' => $gradoSeccion, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -103,6 +103,6 @@ class GradoSeccionController extends Controller
     public function destroy(GradoSeccion $gradoSeccion)
     {
         $gradoSeccion->delete();
-        return response()->json(['Registro eliminado' => $gradoSeccion, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $gradoSeccion, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

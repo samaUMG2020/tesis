@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\escuela\sistema;
 
 use App\Http\Controllers\Controller;
+use App\Models\escuela\catalogo\Mes;
+use App\Models\escuela\sistema\Catedratico;
 use App\Models\escuela\sistema\PagoCatedratico;
 use Illuminate\Http\Request;
 
@@ -38,10 +40,18 @@ class PagoCatedraticoController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = PagoCatedratico::Create($request->all());
-        return response()->json()(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertastes']);
-    
-        // 'monto', 'anio', 'catedratico_id', 'mes_id'
+        
+        $catedratico = Catedratico::find($request->catedratico_id);
+        $mes = Mes::find($request->mes_id);
+
+        $insert = new PagoCatedratico();
+        $insert ->monto = $request->monto;
+        $insert ->anio = $request->anio;
+        $insert ->catedratico_id = $request->catedratico_id;
+        $insert ->mes_id = $request->mes_id;
+        $insert->save();
+
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     
     }
 
@@ -76,18 +86,24 @@ class PagoCatedraticoController extends Controller
      */
     public function update(Request $request, PagoCatedratico $pagoCatedratico)
     {
-        $pagoCatedratico->nombre = $request->nombre;
+        $catedratico = Catedratico::find($request->catedratico_id);
+        $mes = Mes::find($request->mes_id);
+        
+        $pagoCatedratico ->monto = $request->monto;
+        $pagoCatedratico ->anio = $request->anio;
+        $pagoCatedratico ->catedratico_id = $request->catedratico_id;
+        $pagoCatedratico ->mes_id = $request->mes_id;
         $pagoCatedratico->save();
-
-        return response()->json(['Registro editado' => $pagoCatedratico, 'Mensaje' =>  'Felicidades editaste']);
+        
+        return response()->json(['Registro nuevo' => $pagoCatedratico, 'Mensaje' => 'Felicidades editaste']);
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\escuela\sistema\PagoCatedratico  $pagoCatedratico
      * @return \Illuminate\Http\Response
      */
+
     public function destroy(PagoCatedratico $pagoCatedratico)
     {
         $pagoCatedratico->delete();

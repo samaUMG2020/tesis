@@ -18,7 +18,7 @@ class MunicipioController extends Controller
     {
         $values = Municipio::with('departamento')->get();
 
-        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades consultastes']);
+        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades consultaste']);
     }
 
     /**
@@ -47,7 +47,7 @@ class MunicipioController extends Controller
         $insert ->departamento_id= $request->departamento_id;
         $insert ->save();
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
     }
 
     /**
@@ -88,7 +88,7 @@ class MunicipioController extends Controller
         $municipio ->departamento_id= $request->departamento_id;
         $municipio ->save();
 
-        return response()->json(['Registro nuevo' => $municipio, 'Mensaje' => 'Felicidades insertastes']);
+        return response()->json(['Registro nuevo' => $municipio, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -100,6 +100,6 @@ class MunicipioController extends Controller
     public function destroy(Municipio $municipio)
     {
         $municipio->delete();
-        return response()->json(['Registro eliminado' => $municipio, 'Mensaje' => 'Felicidades elimnaste']);
+        return response()->json(['Registro eliminado' => $municipio, 'Mensaje' => 'Felicidades eliminaste']);
     }
 }

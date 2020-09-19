@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Fondo extends Model
 {
-    protected $table = 'fondo';
+    protected $table = 'fondos';
     /**
      * The attributes that are mass assignable.
      *
