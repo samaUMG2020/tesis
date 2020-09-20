@@ -197,7 +197,15 @@ return [
                 [
                     'text' => 'Sección',
                     'url'  => 'seccion',
-                ]
+                ],
+                [
+                    'text' => 'Tipo Fondo',
+                    'url'  => 'tipoFondo',
+                ],
+                [
+                    'text' => 'Tipo Pago Alumno',
+                    'url'  => 'tipoPagoAlumno',
+                ],
             ],
         ],
         [

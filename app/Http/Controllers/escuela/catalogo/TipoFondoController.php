@@ -5,19 +5,39 @@ namespace App\Http\Controllers\escuela\catalogo;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\TipoFondo;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+
 
 class TipoFondoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = TipoFondo::get();
-        return response($values);
+        try {
+            if ($request->has('buscar'))
+                $values = TipoFondo::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = TipoFondo::orderBy('created_at', 'DESC')->paginate(10);
 
+            return view('escuela.catalogo.tipo_fondo.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -27,7 +47,14 @@ class TipoFondoController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('escuela.catalogo.tipo_fondo.create ');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('tipo_fondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('tipo_fondo.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -38,10 +65,23 @@ class TipoFondoController extends Controller
      */
     public function store(Request $request)
     {
-    
-        $dato = TipoFondo::create($request->all());
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:25|unique:tipo_fondo,nombre'
+            ]
+        );
+        try {
+            TipoFondo::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
+            return redirect()->route('tipoFondo.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('tipoFondo.create')->with('danger', 'Error en la base de datos');
+            else 
+                return redirect()->route('tipoFondo.create')->with('danger', $th->getMessage());
+        }
+     
     }
 
     /**
@@ -52,7 +92,14 @@ class TipoFondoController extends Controller
      */
     public function show(TipoFondo $tipoFondo)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('tipoFondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('tipoFondo.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -63,7 +110,14 @@ class TipoFondoController extends Controller
      */
     public function edit(TipoFondo $tipoFondo)
     {
-        //
+        try {
+            return view('escuela.catalogo.tipo_fondo.edit', ['values' => $tipoFondo]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('tipoFondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('tipoFondo.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -75,10 +129,28 @@ class TipoFondoController extends Controller
      */
     public function update(Request $request, TipoFondo $tipoFondo)
     {
-        $tipoFondo->nombre = $request->nombre;
-        $tipoFondo->save();
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:25|unique:tipo_fondo,nombre,'. $tipoFondo->id
+            ]
+        );
 
-        return response()->json(['Registro nuevo' => $tipoFondo, 'Mensaje' => 'Felicidades actualizaste']);
+        try {
+            $tipoFondo->nombre = $request->nombre;
+
+            if (!$tipoFondo->isDirty())
+                return redirect()->route('tipoFondo.edit', $tipoFondo->id)->with('warning', '¡No existe información para actualizar!');
+
+            $tipoFondo->save();
+
+            return redirect()->route('tipoFondo.index')->with('success', '¡El registro fue actualizado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('tipoFondo.edit', $tipoFondo->id)->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('tipoFondo.edit', $tipoFondo->id)->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -89,7 +161,16 @@ class TipoFondoController extends Controller
      */
     public function destroy(TipoFondo $tipoFondo)
     {
-        $tipoFondo->delete();
-        return response()->json(['Registro eliminado' => $tipoFondo, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $tipoFondo->delete();
+
+            return redirect()->route('tipoFondo.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('tipoFondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('tipoFondo.index')->with('danger', $th->getMessage());
+        }
     }
 }
