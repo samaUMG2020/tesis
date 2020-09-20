@@ -13,7 +13,11 @@ class Grado extends Model
         'columns' => [
             'grado.nombre' => 10,
             'grado.nombre_completo' => 20,
-        ]
+            'carrera.nombre' => 20,
+        ],
+        'joins' => [
+            'carrera' => ['grado.carrera_id', 'carrera.id'],
+        ],
     ];
 
     protected $table = 'grado';

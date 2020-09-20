@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\escuela\catalogo;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Curso;
-use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CursoController extends Controller
 {
-   /* public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
         $this->middleware('secretaria');
         $this->middleware('catedratico');
-    }*/
+    }
 
     /**
      * Display a listing of the resource.
@@ -23,16 +24,21 @@ class CursoController extends Controller
      * @return \Illuminate\Http\Response
      */
       
-       public function index(Request $request)
+    public function index(Request $request)
     {
-        if ($request->has('buscar'))
-            $values = Curso::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
-        else
-            $values = Curso::orderBy('created_at', 'DESC')->paginate(10);
+        try {
+            if ($request->has('buscar'))
+                $values = Curso::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = Curso::orderBy('created_at', 'DESC')->paginate(10);
 
-        return view('escuela.catalogo.curso.index', compact('values'));
-        
-    
+            return view('escuela.catalogo.curso.index', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -42,7 +48,14 @@ class CursoController extends Controller
      */
     public function create()
     {
-       
+        try {
+            return view('escuela.catalogo.curso.create');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('curso.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -53,9 +66,23 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Curso::create($request->all());
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:25|unique:curso,nombre'
+            ]
+        );
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
+        try {
+            Curso::create($request->all());
+
+            return redirect()->route('curso.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('curso.create')->with('danger', 'Error en la base de datos');
+            else 
+                return redirect()->route('curso.create')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -66,7 +93,14 @@ class CursoController extends Controller
      */
     public function show(Curso $curso)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('curso.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -77,7 +111,14 @@ class CursoController extends Controller
      */
     public function edit(Curso $curso)
     {
-        //
+        try {
+            return view('escuela.catalogo.curso.edit', ['values' => $curso]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('curso.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -89,10 +130,28 @@ class CursoController extends Controller
      */
     public function update(Request $request, Curso $curso)
     {
-        $curso->nombre = $request->nombre;
-        $curso->save();
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:25|unique:curso,nombre,'. $curso->id
+            ]
+        );
 
-        return response()->json(['Registro editado' => $curso, 'Mensaje' => 'Felicidades editaste']);
+        try {
+            $curso->nombre = $request->nombre;
+
+            if (!$curso->isDirty())
+                return redirect()->route('curso.edit', $curso->id)->with('warning', '¡No existe información para actualizar!');
+
+            $curso->save();
+
+            return redirect()->route('curso.index')->with('success', '¡El registro fue actualizado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('curso.edit', $curso->id)->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('curso.edit', $curso->id)->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -103,7 +162,16 @@ class CursoController extends Controller
      */
     public function destroy(Curso $curso)
     {
-        $curso->delete();
-        return response()->json(['Registro eliminado' => $curso, 'Mensaje' => 'Felicidades eliminaste']); 
+        try {
+            $curso->delete();
+
+            return redirect()->route('curso.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('curso.index')->with('danger', $th->getMessage());
+        }
     }
 }

@@ -1,8 +1,7 @@
 @extends('adminlte::page')
 @section('content_header')
     <h2>
-      Bimestre
-      <a href="{{ route('bimestre.create') }}" class="btn btn-info">Nuevo</a>       
+      Bimestre     
     </h2>
 
     @if(Session::has('success'))
@@ -16,6 +15,12 @@
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
         {{Session::get('warning')}}
+      </div>
+    @elseif(Session::has('danger'))
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
+        {{Session::get('danger')}}
       </div>
     @elseif(Session::has('info'))
       <div class="alert alert-info alert-dismissible">
@@ -54,7 +59,6 @@
                 <th>#</th>
                 <th>Nombre</th>
                 <th>Fecha de ingreso</th>
-                <th>Opciones</th>
               </tr>
             </thead>
             <tbody>
@@ -63,15 +67,7 @@
                 <tr>
                   <td>{{$value->id}}</td>
                   <td>{{$value->nombre}}</td>
-                  <td>{{$value->created_at}}</td>
-                  <td>
-                    <form action="{{ route('bimestre.destroy', $value) }}" method="post">
-                      <a class="btn btn-outline-warning" href="{{ route('bimestre.edit', $value) }}" ><span class="fa fa-pencil-alt"></span></a>
-                      {{csrf_field()}}
-                      <input name="_method" type="hidden" value="DELETE">
-                      <button class="btn btn-outline-danger" type="submit"><span class="fa fa-trash-alt"></span></button>
-                    </form>
-                  </td>                  
+                  <td>{{$value->created_at}}</td>           
                </tr>
                @endforeach 
                @else

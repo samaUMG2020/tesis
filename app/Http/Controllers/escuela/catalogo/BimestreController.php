@@ -4,11 +4,12 @@ namespace App\Http\Controllers\escuela\catalogo;
 
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Bimestre;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class BimestreController extends Controller
 {
-    /*public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
@@ -24,12 +25,19 @@ class BimestreController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('buscar'))
-            $values = Bimestre::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
-        else
-            $values = Bimestre::orderBy('created_at', 'DESC')->paginate(10);
+        try {
+            if ($request->has('buscar'))
+                $values = Bimestre::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = Bimestre::orderBy('created_at', 'DESC')->paginate(10);
 
-        return view('escuela.catalogo.bimestre.index', compact('values'));
+            return view('escuela.catalogo.bimestre.index', compact('values'));
+        } catch (\Exception $th) {
+            if($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -50,9 +58,7 @@ class BimestreController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Bimestre::create($request->all());
-
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
+        //
     }
 
     /**
@@ -86,10 +92,7 @@ class BimestreController extends Controller
      */
     public function update(Request $request, Bimestre $bimestre)
     {
-        $bimestre->nombre = $request->nombre;
-        $bimestre->save();
-
-        return response()->json(['Registro editado' => $bimestre, 'Mensaje' => 'Felicidades editate']);
+        //
     }
 
     /**
@@ -100,7 +103,6 @@ class BimestreController extends Controller
      */
     public function destroy(Bimestre $bimestre)
     {
-        $bimestre->delete();
-        return response()->json(['Registro eliminado' => $bimestre, 'Mensaje' => 'Felicidades eliminaste']);
+        //
     }
 }
