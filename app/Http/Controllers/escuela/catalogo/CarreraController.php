@@ -5,10 +5,11 @@ namespace App\Http\Controllers\escuela\catalogo;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Carrera;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CarreraController extends Controller
 {
-    /*public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
@@ -16,7 +17,7 @@ class CarreraController extends Controller
         $this->middleware('secretaria');
         $this->middleware('catedratico');
     }
-*/
+
     /**
      * Display a listing of the resource.
      *
@@ -24,12 +25,19 @@ class CarreraController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('buscar'))
-            $values = Carrera::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
-        else
-            $values = Carrera::orderBy('created_at', 'DESC')->paginate(10);
+        try {
+            if ($request->has('buscar'))
+                $values = Carrera::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = Carrera::orderBy('created_at', 'DESC')->paginate(10);
 
-        return view('escuela.catalogo.carrera.index', compact('values'));
+            return view('escuela.catalogo.carrera.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -39,7 +47,14 @@ class CarreraController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('escuela.catalogo.carrera.create ');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('carrera.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -50,9 +65,22 @@ class CarreraController extends Controller
      */
     public function store(Request $request)
     {
-        $dato = Carrera::create($request->all());
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:30|unique:carrera,nombre'
+            ]
+        );
+        try {
+            Carrera::create($request->all());
 
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades registraste']);
+            return redirect()->route('carrera.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('carrera.create')->with('danger', 'Error en la base de datos');
+            else 
+                return redirect()->route('carrera.create')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -63,7 +91,14 @@ class CarreraController extends Controller
      */
     public function show(Carrera $carrera)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('carrera.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -74,7 +109,14 @@ class CarreraController extends Controller
      */
     public function edit(Carrera $carrera)
     {
-        //
+        try {
+            return view('escuela.catalogo.carrera.edit', ['values' => $carrera]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('carrera.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -86,10 +128,28 @@ class CarreraController extends Controller
      */
     public function update(Request $request, Carrera $carrera)
     {
-        $carrera->nombre = $request->nombre;
-        $carrera->save();
+        $this->validate(
+            $request,
+            [
+                'nombre' => 'required|max:30|unique:carrera,nombre,'. $carrera->id
+            ]
+        );
 
-        return response()->json(['Registro editado' => $carrera, 'Mensaje' => 'Felicidades editaste']);
+        try {
+            $carrera->nombre = $request->nombre;
+
+            if (!$carrera->isDirty())
+                return redirect()->route('carrera.edit', $carrera->id)->with('warning', '¡No existe información para actualizar!');
+
+            $carrera->save();
+
+            return redirect()->route('carrera.index')->with('success', '¡El registro fue actualizado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('carrera.edit', $carrera->id)->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('carrera.edit', $carrera->id)->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -100,7 +160,16 @@ class CarreraController extends Controller
      */
     public function destroy(Carrera $carrera)
     {
-        $carrera->delete();
-        return response()->json(['Registro eliminado' => $carrera, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $carrera->delete();
+
+            return redirect()->route('carrera.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('carrera.index')->with('danger', $th->getMessage());
+        }
     }
 }

@@ -7,19 +7,38 @@ use App\Models\escuela\catalogo\Curso;
 use App\Models\escuela\catalogo\CursoGS;
 use App\Models\escuela\catalogo\GradoSeccion;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CursoGSController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = CursoGS::with('grado_seccion.grado.carrera', 'grado_seccion.seccion','curso')->get();
+        try {
+            if ($request->has('buscar'))
+                $values = CursoGS::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = CursoGS::orderBy('created_at', 'DESC')->paginate(10);
 
-        return response()->json($values);
+            return view('escuela.catalogo.curso_grado_seccion.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -29,7 +48,14 @@ class CursoGSController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('escuela.catalogo.curso_grado_seccion.create');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -60,7 +86,14 @@ class CursoGSController extends Controller
      */
     public function show(CursoGS $cursoGS)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -71,7 +104,14 @@ class CursoGSController extends Controller
      */
     public function edit(CursoGS $cursoGS)
     {
-        //
+        try {
+            return view('escuela.catalogo.curso_grado_seccion.edit', ['values' => $cursoGS]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -81,17 +121,17 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoG
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CursoGS $cursoG)
+    public function update(Request $request, CursoGS $cursoGS)
     {
         $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
         $curso = Curso::find($request->curso_id);
 
-        $cursoG->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
-        $cursoG->grado_seccion_id = $request->grado_seccion_id;
-        $cursoG->curso_id = $request->curso_id;
-        $cursoG->save();
+        $cursoGS->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
+        $cursoGS->grado_seccion_id = $request->grado_seccion_id;
+        $cursoGS->curso_id = $request->curso_id;
+        $cursoGS->save();
 
-        return response()->json(['Registro editado' => $cursoG, 'Mensaje' => 'Felicidades editaste']);
+        return response()->json(['Registro editado' => $cursoGS, 'Mensaje' => 'Felicidades editaste']);
     }
 
     /**
@@ -100,9 +140,18 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CursoGS $cursoG)
+    public function destroy(CursoGS $cursoGS)
     {
-        $cursoG->delete();
-        return response()->json(['Registro eliminado' => $cursoG, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $cursoGS->delete();
+
+            return redirect()->route('cursoGS.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('cur$cursoGS.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
+        }
     }
 }

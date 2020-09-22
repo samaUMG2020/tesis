@@ -7,19 +7,38 @@ use App\Models\escuela\catalogo\Grado;
 use App\Models\escuela\catalogo\GradoSeccion;
 use App\Models\escuela\catalogo\Seccion;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class GradoSeccionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = GradoSeccion::get();
+        try {
+            if ($request->has('buscar'))
+                $values = GradoSeccion::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = GradoSeccion::orderBy('created_at', 'DESC')->paginate(10);
 
-        return response()->json($values);
+            return view('escuela.catalogo.grado_seccion.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -29,7 +48,14 @@ class GradoSeccionController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('escuela.catalogo.grado_seccion.create ');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -60,7 +86,14 @@ class GradoSeccionController extends Controller
      */
     public function show(GradoSeccion $gradoSeccion)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -71,7 +104,14 @@ class GradoSeccionController extends Controller
      */
     public function edit(GradoSeccion $gradoSeccion)
     {
-        //
+        try {
+            return view('escuela.catalogo.grado_seccion.edit', ['values' => $gradoSeccion]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -102,7 +142,16 @@ class GradoSeccionController extends Controller
      */
     public function destroy(GradoSeccion $gradoSeccion)
     {
-        $gradoSeccion->delete();
-        return response()->json(['Registro eliminado' => $gradoSeccion, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $gradoSeccion->delete();
+
+            return redirect()->route('gradoSeccion.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('tipoFondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.index')->with('danger', $th->getMessage());
+        }
     }
 }

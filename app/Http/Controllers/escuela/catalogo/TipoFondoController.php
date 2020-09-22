@@ -7,7 +7,6 @@ use App\Models\escuela\catalogo\TipoFondo;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
-
 class TipoFondoController extends Controller
 {
     public function __construct()

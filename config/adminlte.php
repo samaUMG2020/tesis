@@ -206,6 +206,14 @@ return [
                     'text' => 'Tipo Pago Alumno',
                     'url'  => 'tipoPagoAlumno',
                 ],
+                [
+                    'text' => 'Curso Grado Seccion',
+                    'url'  => 'cursoGS',
+                ],
+                [
+                    'text' => 'Grado Seccion',
+                    'url'  => 'gradoSeccion',
+                ],
             ],
         ],
         [
@@ -217,9 +225,51 @@ return [
                     'url'  => 'alumno',
                 ],
                 [
+                    'text' => 'Alumno Grado',
+                    'url'  => ' alumnoGrado',
+                ],
+                
+                [
                     'text' => 'Catedrático',
                     'url'  => 'catedratico',
-                ]
+                
+                ],
+                [
+                    'text' => 'Catedrático Curso',
+                    'url'  => 'catedraticoCurso',
+                
+                ],
+                [
+                    'text' => 'Fondo',
+                    'url'  => 'fondo',
+                
+                ],
+                [
+                    'text' => 'Nota',
+                    'url'  => 'nota',
+                
+                ],
+                [
+                    'text' => 'Pago Alumno',
+                    'url'  => 'pagoAlumno',
+                
+                ],
+                [
+                    'text' => 'Pago Catedrático',
+                    'url'  => 'pagoCatedratico',
+                
+                ],
+                [
+                    'text' => 'Persona',
+                    'url'  => 'persona',
+                
+                ],
+                [
+                    'text' => 'Promedio',
+                    'url'  => 'promedio',
+                
+                ],
+                
             ],
         ],
         ['header' => 'Acceso al sistema'],

@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Carrera;
 use App\Models\escuela\catalogo\Grado;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class GradoController extends Controller
 {
-   /* public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
         $this->middleware('secretaria');
         $this->middleware('catedratico');
-    }*/
+    }
 
     /**
      * Display a listing of the resource.
@@ -25,12 +26,19 @@ class GradoController extends Controller
      */
     public function index(Request $request)
     {
+         try {
         if ($request->has('buscar'))
-            $values = Grado::search($request->buscar)->orderBy('id', 'DESC')->paginate(10);
+            $values = Grado::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
         else
-            $values = Grado::orderBy('id', 'DESC')->paginate(10);
+            $values = Grado::orderBy('created_at', 'DESC')->paginate(10);
 
-        return view('escuela.catalogo.grado.index', compact('values'));
+        return view('escuela.catalogo.grado.index ', ['values' => $values]);
+    } catch (\Exception $th) {
+        if ($th instanceof QueryException)
+            return redirect()->route('home')->with('danger', 'Error en la base de datos');
+        else
+            return redirect()->route('home')->with('danger', $th->getMessage());
+    }
     }
 
     /**
@@ -40,7 +48,14 @@ class GradoController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('escuela.catalogo.grado.create ');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('grado.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('grado.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -72,7 +87,14 @@ class GradoController extends Controller
      */
     public function show(Grado $grado)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('grado.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('grado.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -83,7 +105,14 @@ class GradoController extends Controller
      */
     public function edit(Grado $grado)
     {
-        //
+        try {
+            return view('escuela.catalogo.grado.edit', ['values' => $grado]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('grado.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('grado.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -114,8 +143,17 @@ class GradoController extends Controller
      */
     public function destroy(Grado $grado)
     {
-        $grado->delete();
-        return response()->json(['Registro eliminado' => $grado, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $grado->delete();
+
+            return redirect()->route('grado.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                dd($th);
+                //return redirect()->route('gr$grado.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('grado.index')->with('danger', $th->getMessage());
+        }
     }
 }
 
