@@ -31,14 +31,36 @@
         </div>
         
         <div class="card-body">           
-            <form method="POST" action="{{ route('gradoSeccion.update', $gradoSeccion->id) }}"  role="form">
+            <form method="POST" action="{{ route('gradoSeccion.update', $values->id) }}"  role="form">
               {{ csrf_field() }}
               <input name="_method" type="hidden" value="PATCH">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre', $seccion->nombre) }}">
+                    <label for="grado_id">Grado</label>
+                    <select name="grado_id" id="input-grado_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('grado_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($grados as $grado)
+                            <option style="color: black;"
+                            value="{{ $grado->id }}"
+                            {{ ($grado->id == old('grado_id', $values->grado_id)) ? 'selected' : '' }}>{{ $grado->nombre_completo }}</option>
+                        @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <label for="seccion_id">Sección</label>
+                    <select name="seccion_id" id="input-seccion_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('seccion_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($secciones as $seccion)
+                            <option style="color: black;"
+                            value="{{ $seccion->id }}"
+                            {{ ($seccion->id == old('seccion_id', $values->seccion_id)) ? 'selected' : '' }}>{{ $seccion->nombre }}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
               </div>

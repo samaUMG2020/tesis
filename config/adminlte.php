@@ -49,7 +49,7 @@ return [
     |
     */
 
-    'layout_topnav' => null,
+    'layout_topnav' => false,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
@@ -72,9 +72,9 @@ return [
     'classes_brand_text' => '',
     'classes_content_header' => 'container-fluid',
     'classes_content' => 'container-fluid',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-dark-info elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-red navbar-light',
     'classes_topnav_nav' => 'navbar-expand-md',
     'classes_topnav_container' => 'container',
 
@@ -98,7 +98,7 @@ return [
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
-    'sidebar_nav_animation_speed' => 50,
+    'sidebar_nav_animation_speed' => 1800,
 
     /*
     |--------------------------------------------------------------------------
@@ -176,9 +176,10 @@ return [
         ['header' => 'Menú de la escuela'],
         [
             'text'    => 'Catálogos',
-            'icon'    => 'fas fa-fw fa-share',
+            'icon'    => 'fas fa-cog',
             'submenu' => [
                 [
+                    'icon' => 'fas fa-apple-alt',
                     'text' => 'Bimestre',
                     'url'  => 'bimestre',
                 ],
@@ -199,6 +200,14 @@ return [
                     'url'  => 'seccion',
                 ],
                 [
+                    'text' => 'Grado - Sección',
+                    'url'  => 'gradoSeccion',
+                ],
+                [
+                    'text' => 'Grado - Sección - Curso',
+                    'url'  => 'cursoGS',
+                ],
+                [
                     'text' => 'Tipo Fondo',
                     'url'  => 'tipoFondo',
                 ],
@@ -206,19 +215,11 @@ return [
                     'text' => 'Tipo Pago Alumno',
                     'url'  => 'tipoPagoAlumno',
                 ],
-                [
-                    'text' => 'Curso Grado Seccion',
-                    'url'  => 'cursoGS',
-                ],
-                [
-                    'text' => 'Grado Seccion',
-                    'url'  => 'gradoSeccion',
-                ],
             ],
         ],
         [
             'text'    => 'Sistema',
-            'icon'    => 'fas fa-fw fa-laptop',
+            'icon'    => 'fas fa-archway',
             'submenu' => [
                 [
                     'text' => 'Alumno',
@@ -337,16 +338,16 @@ return [
         ],
         [
             'name' => 'Select2',
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => 'js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => 'css/select2.css',
                 ],
             ],
@@ -364,11 +365,11 @@ return [
         ],
         [
             'name' => 'Sweetalert2',
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
                 ],
             ],

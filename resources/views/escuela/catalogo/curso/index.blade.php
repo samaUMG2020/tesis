@@ -5,6 +5,7 @@
       <a href="{{ route('curso.create') }}" class="btn btn-info">Nuevo</a>       
     </h2>
 
+    <!-- Estos son los errores -->
     @if(Session::has('success'))
       <div class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

@@ -11,7 +11,13 @@
           @endforeach
         </ul>
       </div> 
-    @endif          
+    @elseif(Session::has('danger'))
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Error!</h5>
+        {{Session::get('danger')}}
+      </div>
+    @endif           
 @endsection
 
 @section('content')
@@ -28,8 +34,30 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre') }}">
+                    <label for="grado_id">Grado</label>
+                    <select name="grado_id" id="input-grado_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('grado_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($grados as $grado)
+                            <option style="color: black;"
+                            value="{{ $grado->id }}"
+                            {{ ($grado->id == old('grado_id')) ? 'selected' : '' }}>{{ $grado->nombre_completo }}</option>
+                        @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <label for="seccion_id">Sección</label>
+                    <select name="seccion_id" id="input-seccion_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('seccion_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($secciones as $seccion)
+                            <option style="color: black;"
+                            value="{{ $seccion->id }}"
+                            {{ ($seccion->id == old('seccion_id')) ? 'selected' : '' }}>{{ $seccion->nombre }}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
               </div>

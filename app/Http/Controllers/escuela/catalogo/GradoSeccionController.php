@@ -49,7 +49,10 @@ class GradoSeccionController extends Controller
     public function create()
     {
         try {
-            return view('escuela.catalogo.grado_seccion.create ');
+            $grados = Grado::all();
+            $secciones = Seccion::all();
+
+            return view('escuela.catalogo.grado_seccion.create ', ['grados' => $grados, 'secciones' => $secciones]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
                 return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
@@ -66,16 +69,38 @@ class GradoSeccionController extends Controller
      */
     public function store(Request $request)
     {
-        $grado = Grado::find($request->grado_id);
-        $seccion = Seccion::find($request->seccion_id);
+        $this->validate(
+            $request,
+            [
+                'grado_id' => 'required|integer|exists:grado,id',
+                'seccion_id' => 'required|integer|exists:seccion,id'
+            ]
+        );
 
-        $insert = new GradoSeccion();
-        $insert->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
-        $insert->seccion_id = $request->seccion_id;
-        $insert->grado_id = $request->grado_id;
-        $insert->save();
+        try {
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+            $existe = GradoSeccion::where('seccion_id', $request->seccion_id)->where('grado_id', $request->grado_id)->first();
+
+            if (!is_null($existe)) {
+                return redirect()->route('gradoSeccion.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+            }
+
+            $grado = Grado::find($request->grado_id);
+            $seccion = Seccion::find($request->seccion_id);
+
+            $insert = new GradoSeccion();
+            $insert->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
+            $insert->seccion_id = $request->seccion_id;
+            $insert->grado_id = $request->grado_id;
+            $insert->save();
+
+            return redirect()->route('gradoSeccion.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('gradoSeccion.create')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.create')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -105,7 +130,10 @@ class GradoSeccionController extends Controller
     public function edit(GradoSeccion $gradoSeccion)
     {
         try {
-            return view('escuela.catalogo.grado_seccion.edit', ['values' => $gradoSeccion]);
+            $grados = Grado::all();
+            $secciones = Seccion::all();
+
+            return view('escuela.catalogo.grado_seccion.edit', ['values' => $gradoSeccion, 'grados' => $grados, 'secciones' => $secciones]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
                 return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
@@ -123,15 +151,37 @@ class GradoSeccionController extends Controller
      */
     public function update(Request $request, GradoSeccion $gradoSeccion)
     {
-        $grado = Grado::find($request->grado_id); //100
-        $seccion = Seccion::find($request->seccion_id); //1
+        $this->validate(
+            $request,
+            [
+                'grado_id' => 'required|integer|exists:grado,id',
+                'seccion_id' => 'required|integer|exists:seccion,id'
+            ]
+        );
 
-        $gradoSeccion->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
-        $gradoSeccion->seccion_id = $request->seccion_id;
-        $gradoSeccion->grado_id = $request->grado_id;
-        $gradoSeccion->save();
+        try {
 
-        return response()->json(['Registro editado' => $gradoSeccion, 'Mensaje' => 'Felicidades editaste']);
+            $existe = GradoSeccion::where('seccion_id', $request->seccion_id)->where('grado_id', $request->grado_id)->first();
+
+            if (!is_null($existe)) {
+                return redirect()->route('gradoSeccion.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+            }
+
+            $grado = Grado::find($request->grado_id);
+            $seccion = Seccion::find($request->seccion_id);
+
+            $gradoSeccion->nombre_completo = "{$grado->nombre_completo} {$seccion->nombre}";
+            $gradoSeccion->seccion_id = $request->seccion_id;
+            $gradoSeccion->grado_id = $request->grado_id;
+            $gradoSeccion->save();
+
+            return redirect()->route('gradoSeccion.index')->with('success', '¡El registro fue actualizado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('gradoSeccion.create')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('gradoSeccion.create')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -148,8 +198,7 @@ class GradoSeccionController extends Controller
             return redirect()->route('gradoSeccion.index')->with('info', '¡El registro fue eliminado exitosamente!');
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                dd($th);
-                //return redirect()->route('tipoFondo.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('gradoSeccion.index')->with('danger', 'Error en la base de datos');
             else
                 return redirect()->route('gradoSeccion.index')->with('danger', $th->getMessage());
         }

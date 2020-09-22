@@ -1,4 +1,5 @@
 @extends('adminlte::page')
+<!-- Estos son los errores -->
 @section('content_header')
     <h2>Curso</h2>
     @if(Session::has('warning'))

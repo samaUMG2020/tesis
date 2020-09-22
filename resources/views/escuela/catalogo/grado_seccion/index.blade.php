@@ -62,7 +62,7 @@
                 @foreach($values as $value)  
                 <tr>
                   <td>{{$value->id}}</td>
-                  <td>{{$value->nombre}}</td>
+                  <td>{{$value->nombre_completo}}</td>
                   <td>{{$value->created_at}}</td>
                   <td>
                     <form action="{{ route('gradoSeccion.destroy', $value) }}" method="post">

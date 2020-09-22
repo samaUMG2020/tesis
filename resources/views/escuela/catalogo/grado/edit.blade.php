@@ -31,14 +31,29 @@
         </div>
         
         <div class="card-body">           
-            <form method="POST" action="{{ route('grado.update', $seccion->id) }}"  role="form">
+            <form method="POST" action="{{ route('grado.update', $values->id) }}"  role="form">
               {{ csrf_field() }}
               <input name="_method" type="hidden" value="PATCH">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre', $seccion->nombre) }}">
+                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre', $values->nombre) }}">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <label for="carrera_id">Carrera</label>
+                    <select name="carrera_id" id="input-carrera_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('carrera_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($carreras as $carrera)
+                            <option style="color: black;"
+                            value="{{ $carrera->id }}"
+                            {{ ($carrera->id == old('carrera_id', $values->carrera_id)) ? 'selected' : '' }}>{{ $carrera->nombre }}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
               </div>

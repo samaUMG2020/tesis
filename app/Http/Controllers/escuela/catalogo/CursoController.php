@@ -168,8 +168,7 @@ class CursoController extends Controller
             return redirect()->route('curso.index')->with('info', '¡El registro fue eliminado exitosamente!');
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                dd($th);
-                //return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('curso.index')->with('danger', 'Error en la base de datos');
             else
                 return redirect()->route('curso.index')->with('danger', $th->getMessage());
         }

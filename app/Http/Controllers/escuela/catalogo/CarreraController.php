@@ -166,8 +166,7 @@ class CarreraController extends Controller
             return redirect()->route('carrera.index')->with('info', '¡El registro fue eliminado exitosamente!');
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                dd($th);
-                //return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('carrera.index')->with('danger', 'Error en la base de datos');
             else
                 return redirect()->route('carrera.index')->with('danger', $th->getMessage());
         }
