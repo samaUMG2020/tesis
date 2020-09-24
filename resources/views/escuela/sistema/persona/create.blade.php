@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('content_header')
-    <h2>Carrera</h2>
+    <h2>Persona</h2>
     @if (count($errors) > 0)
       <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -29,7 +29,7 @@
         </div>
         
         <div class="card-body">
-            <form method="POST" action="{{ route('carrera.store') }}"  role="form">
+            <form method="POST" action="{{ route('persona.store') }}"  role="form">
               {{ csrf_field() }}
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -40,7 +40,7 @@
                 </div>
               </div>
               <div class="row justify-content-between">
-                <a href="{{ route('carrera.index') }}" class="btn btn-default" >Cancelar</a>
+                <a href="{{ route('persona.index') }}" class="btn btn-default" >Cancelar</a>
                 <button type="submit" class="btn btn-primary">Guardar</button>
               </div>
             </form> 

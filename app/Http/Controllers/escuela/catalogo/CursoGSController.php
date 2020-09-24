@@ -11,7 +11,7 @@ use Illuminate\Database\QueryException;
 
 class CursoGSController extends Controller
 {
-    public function __construct()
+   public function __construct()
     {
         $this->middleware('auth');
         // $this->middleware('administrador');
@@ -49,10 +49,13 @@ class CursoGSController extends Controller
     public function create()
     {
         try {
-            return view('escuela.catalogo.curso_grado_seccion.create');
+            $cursos = Curso::all();
+            $grados_secciones = GradoSeccion::all();
+
+            return view('escuela.catalogo.curso_grado_seccion.create', ['cursos' => $cursos, 'grados_secciones' => $grados_secciones]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('cursoG.index')->with('danger', 'Error en la base de datos');
             else
                 return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
         }
@@ -66,16 +69,39 @@ class CursoGSController extends Controller
      */
     public function store(Request $request)
     {
-        $gradoSeccion = GradoSeccion::find($request->grado_seccion_id);
-        $curso = Curso::find($request->curso_id);
+        $this->validate(
+            $request,
+            [
+                'curso_id' => 'required|integer|exists:curso,id',
+                'grado_seccion_id' => 'required|integer|exists:grado_seccion,id'
+            ]
 
-        $insert = new CursoGS();
-        $insert->nombre_completo = "{$gradoSeccion->nombre_completo}, {$curso->nombre}";
-        $insert->grado_seccion_id = $request->grado_seccion_id;
-        $insert->curso_id = $request->curso_id;
-        $insert->save();
+            );
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+            try {
+                $existe = CursoGS::where('curso_id', $request->curso_id)->where('grado_seccion_id', $request->grado_seccion_id)->first();
+
+                if(!is_null($existe)){
+                    return redirect()->route('cursoGS.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+                }
+
+                $curso = Curso::find($request->curso_id);
+                $gradoSeccion = GradoSeccion::find($request->grado_seccion_id);
+                
+                $insert = new CursoGS();
+                $insert->nombre_completo = "{$gradoSeccion->nombre_completo} {$curso->nombre}";
+                $insert->curso_id = $request->curso_id;
+                $insert->grado_seccion_id = $request->grado_seccion_id;
+                $insert->save();
+                
+                return redirect()->route('cursoGS.index')->with('success', 'El registro fue creado exitosamente!');
+             }catch(\Exception $th){
+                 if($th instanceof QueryException)
+                    return redirect()->route('cursoGS.create')->with('danger', 'Error en la base de datos');
+                else 
+                return redirect()->route('cursoGS.create')->with('danger', $th->getMessage());
+             }
+          
     }
 
     /**
@@ -102,10 +128,13 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function edit(CursoGS $cursoGS)
+    public function edit(CursoGS $cursoG)
     {
         try {
-            return view('escuela.catalogo.curso_grado_seccion.edit', ['values' => $cursoGS]);
+            $cursos = Curso::all();
+            $grados_secciones = GradoSeccion::all();
+
+            return view('escuela.catalogo.curso_grado_seccion.edit', ['values' => $cursoG, 'cursos' => $cursos, 'grados_secciones' => $grados_secciones]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
                 return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
@@ -118,20 +147,44 @@ class CursoGSController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\escuela\catalogo\CursoGS  $cursoG
+     * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CursoGS $cursoGS)
+    public function update(Request $request, CursoGS $cursoG)
     {
-        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
-        $curso = Curso::find($request->curso_id);
+       
+        $this->validate(
+            $request,
+            [
+                'curso_id' => 'required|integer|exists:curso,id',
+                'grado_seccion_id' => 'required|integer|exists:grado_seccion,id'
+            ]
 
-        $cursoGS->nombre_completo = "{$grado_seccion->nombre_completo} {$curso->nombre}";
-        $cursoGS->grado_seccion_id = $request->grado_seccion_id;
-        $cursoGS->curso_id = $request->curso_id;
-        $cursoGS->save();
+            );
 
-        return response()->json(['Registro editado' => $cursoGS, 'Mensaje' => 'Felicidades editaste']);
+            try {
+                $existe = CursoGS::where('curso_id', $request->curso_id)->where('grado_seccion_id', $request->grado_seccion_id)->first();
+
+                if(!is_null($existe)){
+                    return redirect()->route('cursoGS.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+                }
+
+                $curso = Curso::find($request->curso_id);
+                $gradoSeccion = GradoSeccion::find($request->grado_seccion_id);
+                
+                $cursoG->nombre_completo = "{$gradoSeccion->nombre_completo} {$curso->nombre}";
+                $cursoG->curso_id = $request->curso_id;
+                $cursoG->grado_seccion_id = $request->grado_seccion_id;
+                $cursoG->save();
+                
+                return redirect()->route('cursoGS.index')->with('success', 'El registro fue creado exitosamente!');
+             }catch(\Exception $th){
+                 if($th instanceof QueryException)
+                    return redirect()->route('cursoGS.create')->with('danger', 'Error en la base de datos');
+                else 
+                    return redirect()->route('cursoGS.create')->with('danger', $th->getMessage());
+             }
+          
     }
 
     /**
@@ -140,16 +193,15 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CursoGS $cursoGS)
+    public function destroy(CursoGS $cursoG)
     {
         try {
-            $cursoGS->delete();
+            $cursoG->delete();
 
             return redirect()->route('cursoGS.index')->with('info', '¡El registro fue eliminado exitosamente!');
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                dd($th);
-                //return redirect()->route('cur$cursoGS.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
             else
                 return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
         }

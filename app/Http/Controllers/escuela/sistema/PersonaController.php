@@ -6,19 +6,38 @@ use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Municipio;
 use App\Models\escuela\sistema\Persona;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class PersonaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = Persona::with('municipio')->get();
+        try {
+            if ($request->has('buscar'))
+                $values = Persona::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = Persona::orderBy('created_at', 'DESC')->paginate(10);
 
-        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades Consultaste']);
+            return view('escuela.sistema.persona.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -28,7 +47,16 @@ class PersonaController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            $municipios = Municipio::all();
+
+            return view('escuela.sistema.persona.create', ['municipios' => $municipios]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('persona.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('personaS.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -39,26 +67,44 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
-       $municipio = Municipio::find($request->municipio_id);
+        $this->validate(
+            $request,
+            [
+                'municipio_id' => 'required|integer|exists:municipio,id'
+                
+            ]
 
-        $insert = new Persona();
-    
-        $insert ->nombre= $request->nombre;
-        $insert ->apellido= $request->apellido;
-        $insert ->email= $request->email;
-        $insert ->fecha_nacimiento= $request->fecha_nacimiento;
-        $insert ->domicilio= $request->domicilio;
-        $insert ->telefono= $request->telefono;
-        $insert ->municipio_id= $request->municipio_id;
-        $insert->save();
+            );
+            try {
+                $existe = Persona::where('municipio_id', $request->municipio_id)->first();
 
+                if(!is_null($existe)){
+                    return redirect()->route('persona.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+                }
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+                $municipio = Municipio::find($request->municipio_id);
 
-/*$dato = Persona::create($request->all());
+                $insert = new Persona();
 
-return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades registraste']);
-*/
+                
+                $insert ->nombre= $request->nombre;
+                $insert ->apellido= $request->apellido;
+                $insert ->email= $request->email;
+                $insert ->fecha_nacimiento= $request->fecha_nacimiento;
+                $insert ->domicilio= $request->domicilio;
+                $insert ->telefono= $request->telefono;
+                $insert->nombre_completo = "{$municipio->nombre_completo}";
+                $insert ->municipio_id= $request->municipio_id;
+                $insert->save();
+
+                return redirect()->route('persona.index')->with('success', 'El registro fue creado exitosamente!');
+            }catch(\Exception $th){
+                if($th instanceof QueryException)
+                   return redirect()->route('persona.create')->with('danger', 'Error en la base de datos');
+               else 
+               return redirect()->route('persona.create')->with('danger', $th->getMessage());
+            }
+
     }
 
     /**
@@ -69,7 +115,14 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
      */
     public function show(Persona $persona)
     {
-        //
+        try {
+
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('persona.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('persona.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -80,7 +133,17 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
      */
     public function edit(Persona $persona)
     {
-        //
+        
+        try {
+            $municipios = Municipio::all();
+
+            return view('escuela.sistema.persona.create', ['municipios' => $municipios]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('persona.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('personaS.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -92,21 +155,41 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
      */
     public function update(Request $request, Persona $persona)
     {
-        $municipio = Municipio::find($request->municipio_id);
+        $this->validate(
+            $request,
+            [
+                'municipio_id' => 'required|integer|exists:municipio,id'
+                
+            ]
 
-        $persona ->nombre= $request->nombre;
-        $persona ->apellido= $request->apellido;
-        $persona ->email= $request->email;
-        $persona ->fecha_nacimiento= $request->fecha_nacimiento;
-        $persona ->domicilio= $request->domicilio;
-        $persona ->telefono= $request->telefono;
-        $persona ->municipio_id= $request->municipio_id;
-        $persona->save();
-       
+            );
+            try {
+                $existe = Persona::where('municipio_id', $request->municipio_id)->first();
 
-        return response()->json(['Registro nuevo' => $persona, 'Mensaje' => 'Felicidades editaste']);
+                if(!is_null($existe)){
+                    return redirect()->route('persona.index')->with('warning', '¡El registro que intenta agregar ya existe!');
+                }
 
-        //return response()->json(['Registro editado' => $persona, 'Mensaje' => 'Felicidades editaste']);
+                $municipio = Municipio::find($request->municipio_id);
+
+                $persona ->nombre= $request->nombre;
+                $persona ->apellido= $request->apellido;
+                $persona ->email= $request->email;
+                $persona ->fecha_nacimiento= $request->fecha_nacimiento;
+                $persona ->domicilio= $request->domicilio;
+                $persona ->telefono= $request->telefono;
+                $persona->nombre_completo = "{$municipio->nombre_completo}";
+                $persona ->municipio_id= $request->municipio_id;
+                $persona->save();
+
+                return redirect()->route('persona.index')->with('success', 'El registro fue actualizado exitosamente!');
+            }catch(\Exception $th){
+                if($th instanceof QueryException)
+                   return redirect()->route('persona.create')->with('danger', 'Error en la base de datos');
+               else 
+               return redirect()->route('persona.create')->with('danger', $th->getMessage());
+            }
+
     }
 
     /**
@@ -117,7 +200,15 @@ return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades re
      */
     public function destroy(Persona $persona)
     {
-        $persona->delete();
-        return response()->json(['Registro eliminado' => $persona, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $persona->delete();
+
+            return redirect()->route('persona.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('persona.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('persona.index')->with('danger', $th->getMessage());
+        }
     }
 }

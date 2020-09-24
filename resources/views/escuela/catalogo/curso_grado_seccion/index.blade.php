@@ -17,6 +17,12 @@
         <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
         {{Session::get('warning')}}
       </div>
+    @elseif(Session::has('danger'))
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Error!</h5>
+        {{Session::get('danger')}}
+      </div>
     @elseif(Session::has('info'))
       <div class="alert alert-info alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -62,7 +68,7 @@
                 @foreach($values as $value)  
                 <tr>
                   <td>{{$value->id}}</td>
-                  <td>{{$value->nombre}}</td>
+                  <td>{{$value->nombre_completo}}</td>
                   <td>{{$value->created_at}}</td>
                   <td>
                     <form action="{{ route('cursoGS.destroy', $value) }}" method="post">

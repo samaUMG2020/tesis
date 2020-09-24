@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('content_header')
-    <h2>Carrera</h2>
+    <h2>Persona</h2>
     @if(Session::has('warning'))
       <div class="alert alert-warning alert-dismissible">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -37,19 +37,26 @@
         </div>
         
         <div class="card-body">           
-            <form method="POST" action="{{ route('carrera.update', $values->id) }}"  role="form">
+            <form method="POST" action="{{ route('persona.update', $values->id) }}"  role="form">
               {{ csrf_field() }}
               <input name="_method" type="hidden" value="PATCH">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre', $values->nombre) }}">
+                    <label for="muncipio_id">Muncipio</label>
+                    <select name="muncipio_id" id="input-muncipio_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('muncipio_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($muncipios as $muncipio)
+                            <option style="color: black;"
+                            value="{{ $muncipio->id }}"
+                            {{ ($muncipio->id == old('muncipio_id', $values->muncipio_id)) ? 'selected' : '' }}>{{ $muncipio->nombre_completo }}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
               </div>
               <div class="row justify-content-between">
-                <a href="{{ route('carrera.index') }}" class="btn btn-default" >Cancelar</a>
+                <a href="{{ route('persona.index') }}" class="btn btn-default" >Cancelar</a>
                 <button type="submit" class="btn btn-primary">Guardar</button>
               </div>
             </form> 

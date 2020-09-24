@@ -7,6 +7,12 @@
           <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
           {{Session::get('warning')}}
       </div>
+      @elseif(Session::has('danger'))
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Error!</h5>
+        {{Session::get('danger')}}
+      </div>
     @endif
     
     @if (count($errors) > 0)
@@ -31,14 +37,36 @@
         </div>
         
         <div class="card-body">           
-            <form method="POST" action="{{ route('cursoGS.update', $cursoGS->id) }}"  role="form">
+            <form method="POST" action="{{ route('cursoGS.update', $values->id) }}"  role="form">
               {{ csrf_field() }}
               <input name="_method" type="hidden" value="PATCH">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Nombre" value="{{ old('nombre', $cursoGS->nombre) }}">
+                    <label for="curso_id">Curso</label>
+                    <select name="curso_id" id="input-curso_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('curso_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($cursos as $curso)
+                            <option style="color: black;"
+                            value="{{ $curso->id }}"
+                            {{ ($curso->id == old('curso_id', $values->curso_id)) ? 'selected' : '' }}>{{ $curso->nombre }}</option>
+                        @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <label for="grado_seccion_id">Grado Sección</label>
+                    <select name="grado_seccion_id" id="input-grado_seccion_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('grado_seccion_id') ? ' is-invalid' : '' }}">
+                        <option style="color: black;" value="">Seleccionar uno por favor</option>
+                        @foreach ($grados_secciones as $grado_seccion)
+                            <option style="color: black;"
+                            value="{{ $grado_seccion->id }}"
+                            {{ ($grado_seccion->id == old('grado_seccion_id', $values->grado_seccion_id)) ? 'selected' : '' }}>{{ $grado_seccion->nombre_completo }}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
               </div>
