@@ -30,9 +30,9 @@ class AlumnoController extends Controller
     {
         try {
             if ($request->has('buscar'))
-                $values = Alumno::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+                $values = Alumno::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(12);
             else
-                $values = Alumno::orderBy('created_at', 'DESC')->paginate(10);
+                $values = Alumno::orderBy('created_at', 'DESC')->paginate(12);
 
             return view('escuela.sistema.alumno.index ', ['values' => $values]);
         } catch (\Exception $th) {
