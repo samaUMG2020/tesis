@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 @section('content_header')
     <h2>
-      Carrera
-      <a href="{{ route('carrera.create') }}" class="btn btn-info">Nuevo</a>       
+      Alumno
+      <a href="{{ route('alumno.create') }}" class="btn btn-info">Nuevo</a>       
     </h2>
 
     @if(Session::has('success'))
@@ -16,6 +16,12 @@
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
         {{Session::get('warning')}}
+      </div>
+    @elseif(Session::has('danger'))
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Error!</h5>
+        {{Session::get('danger')}}
       </div>
     @elseif(Session::has('info'))
       <div class="alert alert-info alert-dismissible">
@@ -34,7 +40,7 @@
           <h3 class="card-title">Información registrada</h3>
 
           <div class="card-tools">
-            <form action="{{ route('carrera.index') }}" method="get" role="search">
+            <form action="{{ route('alumno.index') }}" method="get" role="search">
               {{ csrf_field() }}
               <div class="input-group input-group-sm" style="width: 450px;">
                 <input type="text" name="buscar" class="form-control float-right" placeholder="Buscar">
@@ -48,41 +54,46 @@
         </div>
         
         <div class="card-body table-responsive p-0">
-          <table class="table table-head-fixed">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Fecha de ingreso</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if($values->count())  
-                @foreach($values as $value)  
-                <tr>
-                  <td>{{$value->id}}</td>
-                  <td>{{$value->nombre}}</td>
-                  <td>{{$value->created_at}}</td>
-                  <td>
-                    <form action="{{ route('carrera.destroy', $value) }}" method="post">
-                      <a class="btn btn-outline-warning" href="{{ route('carrera.edit', $value) }}" ><span class="fa fa-pencil-alt"></span></a>
-                      {{csrf_field()}}
-                      <input name="_method" type="hidden" value="DELETE">
-                      <button class="btn btn-outline-danger" type="submit"><span class="fa fa-trash-alt"></span></button>
-                    </form>
-                  </td>                  
-               </tr>
-               @endforeach 
-               @else
-               <tr>
-                <td colspan="4">
-                  <div class="callout callout-danger"><h5>Mensaje</h5><p>¡No hay información para mostrar!</p></div>
-                </td>
-              </tr>
-              @endif
-            </tbody>
-          </table>
+          <div class="card-body pb-0">
+            <div class="row d-flex align-items-stretch">
+              @foreach ($values as $value)
+              <div class="col-12 col-sm-12 col-md-4 d-flex align-items-stretch">
+                <div class="card bg-light">
+                  <div class="card-header text-muted border-bottom-0">
+                    <!--Digital Strategist-->
+                  </div>
+                  <div class="card-body pt-0">
+                    <div class="row">
+                      <div class="col-7">
+                        <h2 class="lead"><b>{{ $value->nombre_completo }}</b></h2>
+                        <p class="text-muted text-sm"><b>Código: </b> {{ $value->codigo }} </p>
+                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Dirección: {{ "{$value->persona->municipio->nombre_completo}, {$value->persona->direccion}" }}</li>
+                          <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Teléfono #: {{ $value->persona->telefono }}</li>
+                          <li class="small"><span class="fa-li"><i class="fas fa-birthday-cake"></i></span> Fecha de Nacimiento: {{ $value->persona->fechaPersona() }}</li>
+                          <li class="small"><span class="fa-li"><i class="fas fa-praying-hands"></i></span> Edad: {{ $value->persona->edadPersona() }}</li>
+                        </ul>
+                      </div>
+                      <div class="col-5 text-center">
+                        <img src="{{ asset('img/user.png') }}" alt="" class="img-circle img-fluid">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <div class="text-right">
+                      <form action="{{ route('alumno.destroy', $value) }}" method="post">
+                        <a class="btn btn-sm btn-warning" href="{{ route('alumno.edit', $value) }}" ><i class="fas fa-pencil-alt"></i> Editar</a>
+                        {{csrf_field()}}
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button class="btn btn-sm btn-danger" type="submit"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
         </div>
         <div class="card-footer py-4">
           <nav class="d-flex justify-content-end" aria-label="...">

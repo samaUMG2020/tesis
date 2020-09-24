@@ -85,8 +85,6 @@ class PersonaController extends Controller
                 $municipio = Municipio::find($request->municipio_id);
 
                 $insert = new Persona();
-
-                
                 $insert ->nombre= $request->nombre;
                 $insert ->apellido= $request->apellido;
                 $insert ->email= $request->email;

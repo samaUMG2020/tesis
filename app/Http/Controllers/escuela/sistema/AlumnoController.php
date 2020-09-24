@@ -2,23 +2,45 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\sistema\Alumno;
 use App\Models\escuela\sistema\Persona;
-use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use App\Models\escuela\catalogo\Municipio;
 
 class AlumnoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = Alumno::with('persona.municipio')->get();
-        
-        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades consultastes']);
+        try {
+            if ($request->has('buscar'))
+                $values = Alumno::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(10);
+            else
+                $values = Alumno::orderBy('created_at', 'DESC')->paginate(10);
+
+            return view('escuela.sistema.alumno.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -28,7 +50,16 @@ class AlumnoController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            $municipios = Municipio::all();
+
+            return view('escuela.sistema.alumno.create', compact('municipios'));
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('alumno.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('alumno.index')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -39,16 +70,50 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        $persona = Persona::find($request->persona_id);
+        $this->validate(
+            $request,
+            [
+                'codigo' => 'required|integer|digits_between:4,8|unique:alumno,codigo',
+                'nombre' => 'required|max:40',
+                'apellido' => 'required|max:40',
+                'email' => 'nullable|max:50|email',
+                'fecha_nacimiento' => 'required|date_format:d-m-Y',
+                'domicilio' => 'max:100',
+                'telefono' => 'nullable|digits_between:8,8',
+                'municipio_id' => 'required|integer|exists:municipio,id'
+            ]
+        );
 
-        $insert = new Alumno();
-        $insert->codigo = $request->codigo;
-        $insert->nombre_completo = "{$persona->nombre} {$persona->apellido}";
-        $insert->persona_id = $request->persona_id;
-        $insert->save();
-    
-        //$dato = Alumno::create($request->all());
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+        try {
+
+            DB::beginTransaction();
+
+            $persona = new Persona();
+            $persona->nombre = $request->nombre;
+            $persona->apellido = $request->apellido;
+            $persona->email = $request->email;
+            $persona->fecha_nacimiento = date('Y-m-d', strtotime($request->fecha_nacimiento));
+            $persona->domicilio = $request->domicilio;
+            $persona->telefono = $request->telefono;
+            $persona->municipio_id = $request->municipio_id;
+            $persona->save();
+
+            $alumno = new Alumno();
+            $alumno->codigo = $request->codigo;
+            $alumno->nombre_completo = "{$persona->nombre} {$persona->apellido}";
+            $alumno->persona_id = $persona->id;
+            $alumno->save();
+
+            DB::commit();
+
+            return redirect()->route('alumno.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            DB::rollback();
+            if ($th instanceof QueryException)
+                return redirect()->route('alumno.create')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('alumno.create')->with('danger', $th->getMessage());
+        }        
     }
 
     /**

@@ -31,7 +31,7 @@ Route::resource('tipoPagoAlumno', 'escuela\catalogo\tipoPagoAlumnoController'); 
 Route::resource('rol', 'escuela\seguridad\RolController'); //REALIZADO EL 11/09
 Route::resource('usuario', 'escuela\seguridad\UsuarioController'); //REALIZADO EL 12/09
 
-Route::resource('alumno', 'escuela\sistema\alumnoController'); //REALIZADO EL 12/09
+Route::resource('alumno', 'escuela\sistema\AlumnoController'); //REALIZADO EL 12/09
 Route::resource('alumnoGrado', 'escuela\sistema\alumnoGradoController'); //REALIZADO EL 12/09
 Route::resource('catedratico', 'escuela\sistema\CatedraticoController'); //REALIZADO EL 12/09
 Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController'); //REALIZADO EL 13/09

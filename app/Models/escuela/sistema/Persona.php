@@ -2,8 +2,9 @@
 
 namespace App\Models\escuela\sistema;
 
-use App\Models\escuela\catalogo\Municipio;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\escuela\catalogo\Municipio;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Persona extends Model
@@ -30,9 +31,15 @@ class Persona extends Model
         'domicilio', 'telefono', 'municipio_id'
     ];
 
-    protected $casts = [
-        'fecha_nacimiento' => 'date: d/m/Y'
-    ];
+    public function fechaPersona()
+    {
+        return date('d-m-Y', strtotime($this->fecha_nacimiento));
+    }
+
+    public function edadPersona()
+    {
+        return Carbon::parse($this->fecha_nacimiento)->age;
+    }
 
     public function setEmailAttribute($value)
     {
