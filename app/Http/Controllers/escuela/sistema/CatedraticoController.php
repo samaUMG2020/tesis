@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\sistema\Catedratico;
 use App\Models\escuela\sistema\Persona;
 use Faker\Provider\ar_JO\Person;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CatedraticoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
     /**
      * Display a listing of the resource.
      *
