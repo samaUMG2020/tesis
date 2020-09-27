@@ -30,7 +30,7 @@ class TipoPagoAlumnoController extends Controller
             else
                 $values = TipoPagoAlumno::orderBy('created_at', 'DESC')->paginate(10);
 
-            return view('escuela.catalogo.tipo_pago_alumno.index ', ['values' => $values]);
+            return view('escuela.catalogo.tipo_pago_alumno.index ', ['values' => $values, 'esconder' => true]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
                 return redirect()->route('home')->with('danger', 'Error en la base de datos');

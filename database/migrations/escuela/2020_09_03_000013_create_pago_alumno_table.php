@@ -16,12 +16,13 @@ class CreatePagoAlumnoTable extends Migration
         Schema::create('pago_alumno', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->decimal('monto', 11, 2);
+            $table->year("anio");
 
             $table->unsignedBigInteger('alumno_id');
             $table->foreign('alumno_id')->references('id')->on('alumno');
 
-            $table->unsignedBigInteger('grado_id');
-            $table->foreign('grado_id')->references('id')->on('grado');
+            $table->unsignedBigInteger('grado_seccion_id');
+            $table->foreign('grado_seccion_id')->references('id')->on('grado_seccion');
 
             $table->unsignedBigInteger('mes_id');
             $table->foreign('mes_id')->references('id')->on('mes');

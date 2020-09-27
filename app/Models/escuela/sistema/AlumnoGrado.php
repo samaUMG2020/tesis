@@ -10,7 +10,7 @@ class AlumnoGrado extends Model
     protected $table = 'alumno_grado';
 
     protected $fillable = [
-        'anio', 'grado_seccion_id', 'alumno_id'
+        'anio', 'grado_seccion_id', 'alumno_id', 'activo'
     ];
 
     public function grado_seccion()

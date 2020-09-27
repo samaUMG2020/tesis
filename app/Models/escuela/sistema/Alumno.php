@@ -25,7 +25,7 @@ class Alumno extends Model
      */
 
     protected $fillable = [
-        'codigo', 'nombre_completo', 'persona_id'
+        'codigo', 'nombre_completo', 'persona_id', 'activo', 'graduado'
     ];
 
     public function persona()

@@ -16,6 +16,7 @@ class CreateAlumnoGradoTable extends Migration
         Schema::create('alumno_grado', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->year("anio");
+            $table->boolean('activo')->default(true);
 
             $table->unsignedBigInteger('grado_seccion_id');
             $table->foreign('grado_seccion_id')->references('id')->on('grado_seccion');

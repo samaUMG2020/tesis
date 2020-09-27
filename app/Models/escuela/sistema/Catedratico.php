@@ -23,7 +23,7 @@ class Catedratico extends Model
      */
 
     protected $fillable = [
-        'codigo', 'nombre_completo', 'persona_id'
+        'codigo', 'nombre_completo', 'persona_id', 'activo'
     ];
 
     public function persona()

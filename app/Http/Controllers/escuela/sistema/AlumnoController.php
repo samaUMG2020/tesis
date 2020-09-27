@@ -73,7 +73,7 @@ class AlumnoController extends Controller
         $this->validate(
             $request,
             [
-                'codigo' => 'required|integer|digits_between:4,8|unique:alumno,codigo',
+                'codigo' => 'required|digits_between:4,8|unique:alumno,codigo',
                 'nombre' => 'required|max:40',
                 'apellido' => 'required|max:40',
                 'email' => 'nullable|max:50|email',
@@ -110,7 +110,7 @@ class AlumnoController extends Controller
         } catch (\Exception $th) {
             DB::rollback();
             if ($th instanceof QueryException)
-                return redirect()->route('alumno.create')->with('danger', 'Error en la base de datos');
+                return redirect()->route('alumno.create')->with('danger', $th->getMessage());
             else
                 return redirect()->route('alumno.create')->with('danger', $th->getMessage());
         }        
@@ -145,9 +145,10 @@ class AlumnoController extends Controller
     {
         try {
             $municipios = Municipio::all();
+            $persona = Persona::find($alumno->persona_id);
             
 
-            return view('escuela.sistema.alumno.edit', ['values' => $alumno, 'municipios' => $municipios]);
+            return view('escuela.sistema.alumno.edit', ['alumno' => $alumno, 'municipios' => $municipios, 'persona' => $persona]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
                 return redirect()->route('alumno.index')->with('danger', 'Error en la base de datos');
@@ -163,13 +164,13 @@ class AlumnoController extends Controller
      * @param  \App\Models\escuela\sistema\Alumno  $alumno
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Alumno $alumno, Persona $persona)
+    public function update(Request $request, Alumno $alumno)
     {
         $this->validate(
             $request,
             [
-                'codigo' => 'required|integer|digits_between:4,8|unique:alumno,codigo',
                 'nombre' => 'required|max:40',
+                'codigo' => 'required|integer|digits_between:4,8|unique:alumno,codigo,'.$alumno->id,
                 'apellido' => 'required|max:40',
                 'email' => 'nullable|max:50|email',
                 'fecha_nacimiento' => 'required|date_format:d-m-Y',
@@ -183,7 +184,11 @@ class AlumnoController extends Controller
 
             DB::beginTransaction();
 
-         
+            $alumno->codigo = $request->codigo;
+            $alumno->nombre_completo = "{$request->nombre} {$request->apellido}";
+            $alumno->save();
+
+            $persona = Persona::find($alumno->persona_id);
             $persona->nombre = $request->nombre;
             $persona->apellido = $request->apellido;
             $persona->email = $request->email;
@@ -192,12 +197,6 @@ class AlumnoController extends Controller
             $persona->telefono = $request->telefono;
             $persona->municipio_id = $request->municipio_id;
             $persona->save();
-
-           
-            $alumno->codigo = $request->codigo;
-            $alumno->nombre_completo = "{$persona->nombre} {$persona->apellido}";
-            $alumno->persona_id = $persona->id;
-            $alumno->save();
 
             DB::commit();
 

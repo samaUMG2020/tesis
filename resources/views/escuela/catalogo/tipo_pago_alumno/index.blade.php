@@ -2,7 +2,9 @@
 @section('content_header')
     <h2>
       Tipo Pago Alumno 
-      <a href="{{ route('tipoPagoAlumno.create') }}" class="btn btn-info">Nuevo</a>       
+      @if (!$esconder)
+        <a href="{{ route('tipoPagoAlumno.create') }}" class="btn btn-info">Nuevo</a>    
+      @endif   
     </h2>
 
     @if(Session::has('success'))
@@ -71,12 +73,14 @@
                   <td>{{$value->nombre}}</td>
                   <td>{{$value->created_at}}</td>
                   <td>
+                  @if (!$esconder)
                     <form action="{{ route('tipoPagoAlumno.destroy', $value) }}" method="post">
                       <a class="btn btn-outline-warning" href="{{ route('tipoPagoAlumno.edit', $value) }}" ><span class="fa fa-pencil-alt"></span></a>
                       {{csrf_field()}}
                       <input name="_method" type="hidden" value="DELETE">
                       <button class="btn btn-outline-danger" type="submit"><span class="fa fa-trash-alt"></span></button>
                     </form>
+                  @endif
                   </td>                  
                </tr>
                @endforeach 

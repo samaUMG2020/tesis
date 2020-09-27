@@ -9,6 +9,8 @@ class Mes extends Model
 {
     use SearchableTrait;
 
+    const NA = '13';
+
     protected $searchable = [
         'columns' => [
             'mes.nombre' => 10,

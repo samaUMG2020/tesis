@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 @section('content_header')
     <h2>
-      Carrera
-      <a href="{{ route('carrera.create') }}" class="btn btn-info">Nuevo</a>       
+      Inscripciones
+      <a href="{{ route('inscripcion.create') }}" class="btn btn-info">Inscribir un nuevo alumno</a>            
     </h2>
 
     @if(Session::has('success'))
@@ -20,7 +20,7 @@
     @elseif(Session::has('danger'))
       <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Error!</h5>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Advertencia!</h5>
         {{Session::get('danger')}}
       </div>
     @elseif(Session::has('info'))
@@ -40,10 +40,10 @@
           <h3 class="card-title">Información registrada</h3>
 
           <div class="card-tools">
-            <form action="{{ route('carrera.index') }}" method="get" role="search">
+            <form action="{{ route('inscripcion.index') }}" method="get" role="search">
               {{ csrf_field() }}
               <div class="input-group input-group-sm" style="width: 450px;">
-                <input type="text" name="buscar" class="form-control float-right" placeholder="Buscar">
+                <input type="text" name="buscar" class="form-control float-right" value="{{ old('buscar', $buscar) }}" placeholder="Buscar">
   
                 <div class="input-group-append">
                   <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
@@ -54,41 +54,38 @@
         </div>
         
         <div class="card-body table-responsive p-0">
-          <table class="table table-head-fixed">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Fecha de ingreso</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if($values->count())  
-                @foreach($values as $value)  
-                <tr>
-                  <td>{{$value->id}}</td>
-                  <td>{{$value->nombre}}</td>
-                  <td>{{$value->created_at}}</td>
-                  <td>
-                    <form action="{{ route('carrera.destroy', $value) }}" method="post">
-                      <a class="btn btn-outline-warning" href="{{ route('carrera.edit', $value) }}" ><span class="fa fa-pencil-alt"></span></a>
+          <div class="card-body pb-0">
+            <div class="row d-flex align-items-stretch">
+              @foreach ($values as $value)
+              <div class="col-xs-12 col-sm-12 col-md-3">
+                <div class="post small-box bg-success">
+                  <br>
+                  <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle" src="{{ asset('img/user.png') }}" alt="user image">
+                    <br>
+                    <br>
+                    <span class="username">
+                      <h6>{{ $value->alumno }}</h6>
+                    </span>
+                    <span class="description">{{ "{$value->tipo_pago_alumno} - Q ".number_format($value->monto,2,'.',',') }}</span>
+                  </div>
+                  <hr>
+                  <p class="text-center">{{ $value->grado }}</p>
+                  <p>
+                    <form action="{{ route('inscripcion.destroy', $value->id) }}" method="post" class="text-center">
+                      <a class="btn btn-sm btn-primary" href="{{ route('mensualidad.edit', $value->id) }}" >{{ "Pagar mensualidad del año {$value->anio}" }}</a>
                       {{csrf_field()}}
+                      <br><br>
                       <input name="_method" type="hidden" value="DELETE">
-                      <button class="btn btn-outline-danger" type="submit"><span class="fa fa-trash-alt"></span></button>
+                      <button class="btn btn-sm btn-danger" type="submit">{{ "Borrar la inscripción del año {$value->anio}" }}</button>
                     </form>
-                  </td>                  
-               </tr>
-               @endforeach 
-               @else
-               <tr>
-                <td colspan="4">
-                  <div class="callout callout-danger"><h5>Mensaje</h5><p>¡No hay información para mostrar!</p></div>
-                </td>
-              </tr>
-              @endif
-            </tbody>
-          </table>
+                  </p>
+                  <br>
+                </div>
+              </div>
+              @endforeach
+            </div>
+          </div>
         </div>
         <div class="card-footer py-4">
           <nav class="d-flex justify-content-end" aria-label="...">

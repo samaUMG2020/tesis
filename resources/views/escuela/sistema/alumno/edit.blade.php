@@ -37,14 +37,14 @@
         </div>
         
         <div class="card-body">           
-            <form method="POST" action="{{ route('alumno.update', $values->id) }}"  role="form">
+            <form method="POST" action="{{ route('alumno.update', $alumno->id) }}"  role="form">
               {{ csrf_field() }}
               <input name="_method" type="hidden" value="PATCH">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-2">
                   <div class="form-group">
                     <label for="codigo">Codigo del Alumno</label>
-                    <input type="text" name="codigo" id="codigo" class="form-control form-control-alternative{{ $errors->has('codigo') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir el código del alumno" value="{{ old('codigo') }}">
+                    <input type="text" name="codigo" id="codigo" class="form-control form-control-alternative{{ $errors->has('codigo') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir el código del alumno" value="{{ old('codigo', $alumno->codigo) }}">
                   </div>
                 </div>
               </div>
@@ -52,13 +52,13 @@
                 <div class="col-xs-12 col-sm-12 col-md-6">
                   <div class="form-group">
                     <label for="nombre">Nombres del Alumno</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir los nombres o nombre del alumno" value="{{ old('nombre') }}">
+                    <input type="text" name="nombre" id="nombre" class="form-control form-control-alternative{{ $errors->has('nombre') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir los nombres o nombre del alumno" value="{{ old('nombre', $persona->nombre) }}">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6">
                   <div class="form-group">
                     <label for="apellido">Apellidos del Alumno</label>
-                    <input type="text" name="apellido" id="apellido" class="form-control form-control-alternative{{ $errors->has('apellido') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir los apellidos o apellido del alumno" value="{{ old('apellido') }}">
+                    <input type="text" name="apellido" id="apellido" class="form-control form-control-alternative{{ $errors->has('apellido') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir los apellidos o apellido del alumno" value="{{ old('apellido', $persona->apellido) }}">
                   </div>
                 </div>
               </div> 
@@ -66,19 +66,19 @@
                 <div class="col-xs-12 col-sm-12 col-md-4">
                   <div class="form-group">
                     <label for="email">Correo electrónico</label>
-                    <input type="text" name="email" id="email" class="form-control form-control-alternative{{ $errors->has('email') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir correo electrónico del alumno" value="{{ old('email') }}">
+                    <input type="text" name="email" id="email" class="form-control form-control-alternative{{ $errors->has('email') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir correo electrónico del alumno" value="{{ old('email', $persona->email) }}">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4">
                   <div class="form-group">
                     <label for="fecha_nacimiento">Fecha de Nacimiento del Alumno</label>
-                    <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control form-control-alternative{{ $errors->has('fecha_nacimiento') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir la fecha de nacimiento del alumno" value="{{ old('fecha_nacimiento') }}">
+                    <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control form-control-alternative{{ $errors->has('fecha_nacimiento') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir la fecha de nacimiento del alumno" value="{{ old('fecha_nacimiento', date('d-m-Y',strtotime($persona->fecha_nacimiento))) }}">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4">
                   <div class="form-group">
                     <label for="telefono">Teléfono del Alumno</label>
-                    <input type="text" name="telefono" id="telefono" class="form-control form-control-alternative{{ $errors->has('telefono') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir el número de teléfono del alumno" value="{{ old('telefono') }}">
+                    <input type="text" name="telefono" id="telefono" class="form-control form-control-alternative{{ $errors->has('telefono') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir el número de teléfono del alumno" value="{{ old('telefono', $persona->telefono) }}">
                   </div>
                 </div>
               </div>
@@ -92,7 +92,7 @@
                         @foreach ($municipios as $municipio)
                             <option style="color: black;"
                             value="{{ $municipio->id }}"
-                            {{ ($municipio->id == old('municipio_id')) ? 'selected' : '' }}>{{ $municipio->nombre_completo}}</option>
+                            {{ ($municipio->id == old('municipio_id', $persona->municipio_id)) ? 'selected' : '' }}>{{ $municipio->nombre_completo}}</option>
                         @endforeach
                     </select>
                   </div>
@@ -102,7 +102,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <label for="domicilio">Dirección</label>
-                    <input type="text" name="domicilio" id="domicilio" class="form-control form-control-alternative{{ $errors->has('domicilio') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir la dirección del alumno" value="{{ old('domicilio') }}">
+                    <input type="text" name="domicilio" id="domicilio" class="form-control form-control-alternative{{ $errors->has('domicilio') ? ' is-invalid' : '' }} input-sm" placeholder="Escribir la dirección del alumno" value="{{ old('domicilio', $persona->domicilio) }}">
                   </div>
                 </div>
               </div>
@@ -115,4 +115,9 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+    $('#fecha_nacimiento').datepicker({  
+       format: 'dd-mm-yyyy'
+    });  
+</script> 
 @endsection

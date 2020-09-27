@@ -227,7 +227,7 @@ return [
                 ],
                 [
                     'text' => 'Alumno Grado',
-                    'url'  => ' alumnoGrado',
+                    'url'  => 'alumnoGrado',
                 ],
                 
                 [
@@ -246,13 +246,8 @@ return [
                 
                 ],
                 [
-                    'text' => 'Nota',
-                    'url'  => 'nota',
-                
-                ],
-                [
-                    'text' => 'Pago Alumno',
-                    'url'  => 'pagoAlumno',
+                    'text' => 'Inscripción',
+                    'url'  => 'inscripcion',
                 
                 ],
                 [
@@ -261,16 +256,10 @@ return [
                 
                 ],
                 [
-                    'text' => 'Persona',
-                    'url'  => 'persona',
-                
-                ],
-                [
                     'text' => 'Promedio',
                     'url'  => 'promedio',
                 
                 ],
-                
             ],
         ],
         ['header' => 'Acceso al sistema'],

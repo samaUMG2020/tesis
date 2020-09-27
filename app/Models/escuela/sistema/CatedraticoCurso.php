@@ -15,7 +15,7 @@ class CatedraticoCurso extends Model
      */
 
     protected $fillable = [
-        'curso_g_s_id', 'catedratico_id'
+        'curso_g_s_id', 'catedratico_id', 'activo'
     ];
 
     public function curso_g_s()

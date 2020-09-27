@@ -2,25 +2,30 @@
 
 namespace App\Models\escuela\sistema;
 
-use App\Models\escuela\catalogo\Grado;
 use App\Models\escuela\catalogo\Mes;
+use App\Models\escuela\sistema\Alumno;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\escuela\catalogo\GradoSeccion;
+use App\Models\escuela\catalogo\TipoPagoAlumno;
 
 class PagoAlumno extends Model
 {
+    const Proximo = 'Próximo Año';
+    const Actual = 'Año Actual';
+
     protected $table = 'pago_alumno';
 
     protected $fillable = [
-        'monto', 'alumno_id', 'grado_id', 'mes_id', 'tipo_pago_alumno_id'
+        'monto', 'alumno_id', 'grado_seccion_id', 'mes_id', 'tipo_pago_alumno_id', 'anio'
     ];
 
     public function alumno()
     {
         return $this->belongsTo(Alumno::class, 'alumno_id', 'id');
     }
-    public function grado()
+    public function grado_seccion()
     {
-        return $this->belongsTo(Grado::class, 'grado_id', 'id');
+        return $this->belongsTo(GradoSeccion::class, 'grado_seccion_id', 'id');
     }
     public function mes()
     {

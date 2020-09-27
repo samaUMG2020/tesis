@@ -19,8 +19,8 @@ class CreatePersonaTable extends Migration
             $table->string('apellido');
             $table->string('email')->nullable();
             $table->date('fecha_nacimiento');
-            $table->string('domicilio')->default('ninguna');
-            $table->string('telefono')->default('ninguno');
+            $table->string('domicilio')->nullable();
+            $table->string('telefono')->nullable();
             
             $table->unsignedBigInteger('municipio_id');
             $table->foreign('municipio_id')->references('id')->on('municipio');

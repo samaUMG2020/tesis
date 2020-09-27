@@ -38,7 +38,8 @@ Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController')
 Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController'); //REALIZADO EL 13/09
 Route::resource('fondo','escuela\sistema\fondoController'); //REALIZADO EL 13/09
 Route::resource('nota','escuela\sistema\notaController'); //REALIZADO EL 13/09
-Route::resource('pagoAlumno','escuela\sistema\pagoAlumnoController'); //REALIZADO EL 14/09
+Route::resource('inscripcion', 'escuela\sistema\InscripcionController'); //REALIZADO EL 14/09
+Route::resource('mensualidad', 'escuela\sistema\MensualidadController'); //REALIZADO EL 14/09
 Route::resource('pagoCatedratico','escuela\sistema\pagoCatedraticoController'); //REALIZADO EL 14/09
 Route::resource('persona','escuela\sistema\PersonaController'); //REALIZADO EL 14/09
 Route::resource('municipio','escuela\catalogo\MunicipioController'); //REALIZADO EL 14/09

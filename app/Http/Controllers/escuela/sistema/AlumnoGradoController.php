@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
-use App\Http\Controllers\Controller;
-use App\Models\escuela\catalogo\GradoSeccion;
-use App\Models\escuela\sistema\Alumno;
-use App\Models\escuela\sistema\AlumnoGrado;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
+use App\Models\escuela\sistema\AlumnoGrado;
+use App\Models\escuela\catalogo\GradoSeccion;
+use Illuminate\Support\Facades\DB;
 
 class AlumnoGradoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // $this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria');
+        $this->middleware('catedratico');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +27,28 @@ class AlumnoGradoController extends Controller
      */
     public function index()
     {
-        //$values = AlumnoGrado::with('grado_seccion.grado.carrera', 'alumno', 'grado_seccion.seccion')->get();
-        $values = AlumnoGrado::get();
-        return response()->json(['Registro nuevo' => $values, 'Mensaje' => 'Felicidades Consultaste']);
+        try {
+            $anio_actual = date('Y');
+            $values = DB::table('grado_seccion')
+            ->join('seccion', 'grado_seccion.seccion_id', 'seccion.id')
+            ->join('grado', 'grado_seccion.grado_id', 'grado.id')
+            ->join('carrera', 'grado.carrera_id', 'carrera.id')
+            ->select(
+                'grado_seccion.id AS id',
+                DB::RAW('CONCAT(grado.nombre," ",carrera.nombre," - Sección ",seccion.nombre) AS nombre'),
+                DB::RAW("(SELECT COUNT(*) FROM alumno_grado WHERE alumno_grado.grado_seccion_id = grado_seccion.id AND alumno_grado.anio = {$anio_actual}) AS cantidad")
+            )
+            ->orderBy('grado.nombre')
+            ->orderBy('seccion.nombre')
+            ->get();
+
+            return view('escuela.sistema.alumno_grado.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', $th->getMessage());
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**

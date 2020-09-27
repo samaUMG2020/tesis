@@ -66,6 +66,42 @@ class DatabaseSeeder extends Seeder
         $mes->nombre = "Abril";
         $mes->save();
 
+        $mes = new Mes();
+        $mes->nombre = "Mayo";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Junio";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Julio";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Agosto";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Septiembre";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Octubre";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Noviembre";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Diciembre";
+        $mes->save();
+
+        $mes = new Mes();
+        $mes->nombre = "Ninguno";
+        $mes->save();
+
         $seccion = new Seccion();
         $seccion->nombre = "A";
         $seccion->save();

@@ -17,6 +17,7 @@ class CreateCatedraticoTable extends Migration
             $table->bigIncrements('id');
             $table->string('codigo')->unique();
             $table->string('nombre_completo', 100)->unique();
+            $table->boolean('activo')->default(true);
 
             $table->unsignedBigInteger('persona_id');
             $table->foreign('persona_id')->references('id')->on('persona');

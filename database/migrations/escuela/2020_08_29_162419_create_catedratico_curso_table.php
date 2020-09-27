@@ -15,6 +15,7 @@ class CreateCatedraticoCursoTable extends Migration
     {
         Schema::create('catedratico_curso', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean('activo')->default(true);
 
             $table->unsignedBigInteger('curso_g_s_id');
             $table->foreign('curso_g_s_id')->references('id')->on('curso_g_s');
