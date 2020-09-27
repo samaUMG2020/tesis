@@ -9,6 +9,7 @@ use App\Models\escuela\sistema\Alumno;
 use App\Models\escuela\sistema\Persona;
 use Illuminate\Database\QueryException;
 use App\Models\escuela\catalogo\Municipio;
+use App\Models\escuela\sistema\PagoAlumno;
 
 class AlumnoController extends Controller
 {
@@ -30,9 +31,9 @@ class AlumnoController extends Controller
     {
         try {
             if ($request->has('buscar'))
-                $values = Alumno::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(12);
+                $values = Alumno::search($request->buscar)->where('graduado', false)->orderBy('created_at', 'DESC')->paginate(15);
             else
-                $values = Alumno::orderBy('created_at', 'DESC')->paginate(12);
+                $values = Alumno::where('graduado', false)->orderBy('created_at', 'DESC')->paginate(15);
 
             return view('escuela.sistema.alumno.index ', ['values' => $values]);
         } catch (\Exception $th) {
@@ -220,7 +221,13 @@ class AlumnoController extends Controller
     public function destroy(Alumno $alumno)
     {
         try {
-        $alumno->delete();
+
+        $inscripciones = PagoAlumno::where('alumno_id', $alumno->id)->get();
+
+        if(count($inscripciones) > 0)
+            return redirect()->route('alumno.index')->with('warning', '¡El alumno tiene registros en el sistema!');
+        else
+            $alumno->delete();
 
         return redirect()->route('alumno.index')->with('info', '¡El registro fue eliminado exitosamente!');
         } catch (\Exception $th) {
@@ -228,6 +235,6 @@ class AlumnoController extends Controller
             return redirect()->route('alumno.index')->with('danger', 'Error en la base de datos');
         else
             return redirect()->route('alumno.index')->with('danger', $th->getMessage());
+        }
     }
-}
 }

@@ -17,6 +17,8 @@ use App\Models\escuela\catalogo\Mes;
 use App\Models\escuela\catalogo\TipoFondo;
 use App\Models\escuela\catalogo\TipoPagoAlumno;
 use App\Models\escuela\seguridad\Usuario;
+use App\Models\escuela\sistema\Alumno;
+use App\Models\escuela\sistema\Catedratico;
 
 class DatabaseSeeder extends Seeder
 {
@@ -99,7 +101,7 @@ class DatabaseSeeder extends Seeder
         $mes->save();
 
         $mes = new Mes();
-        $mes->nombre = "Ninguno";
+        $mes->nombre = "Única";
         $mes->save();
 
         $seccion = new Seccion();
@@ -285,5 +287,8 @@ class DatabaseSeeder extends Seeder
         $usuario->persona_id = $persona->id;
         $usuario->rol_id = $rol_catedratico->id;
         $usuario->save();
+
+        factory(Alumno::class, 300)->create();
+        factory(Catedratico::class, 15)->create();
     }
 }

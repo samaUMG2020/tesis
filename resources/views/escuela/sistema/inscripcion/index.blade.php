@@ -2,7 +2,8 @@
 @section('content_header')
     <h2>
       Inscripciones
-      <a href="{{ route('inscripcion.create') }}" class="btn btn-info">Inscribir un nuevo alumno</a>            
+      <a href="{{ route('inscripcion.create') }}" class="btn btn-info">Inscribir un nuevo alumno en el ciclo {{ date('Y') }}</a>  
+      <a href="{{ route('inscripcion.create_siguiente') }}" class="btn btn-info">Inscribir un nuevo alumno en el ciclo {{ date("Y",strtotime(date('Y-m-d'). "+ 1 year")) }}</a>           
     </h2>
 
     @if(Session::has('success'))
@@ -58,7 +59,7 @@
             <div class="row d-flex align-items-stretch">
               @foreach ($values as $value)
               <div class="col-xs-12 col-sm-12 col-md-3">
-                <div class="post small-box bg-success">
+                <div class="post small-box {{ $value->activo ? 'bg-success' : 'bg-danger' }}">
                   <br>
                   <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle" src="{{ asset('img/user.png') }}" alt="user image">
@@ -72,13 +73,15 @@
                   <hr>
                   <p class="text-center">{{ $value->grado }}</p>
                   <p>
-                    <form action="{{ route('inscripcion.destroy', $value->id) }}" method="post" class="text-center">
-                      <a class="btn btn-sm btn-primary" href="{{ route('mensualidad.edit', $value->id) }}" >{{ "Pagar mensualidad del año {$value->anio}" }}</a>
-                      {{csrf_field()}}
-                      <br><br>
-                      <input name="_method" type="hidden" value="DELETE">
-                      <button class="btn btn-sm btn-danger" type="submit">{{ "Borrar la inscripción del año {$value->anio}" }}</button>
-                    </form>
+                    @if ($value->activo)
+                      <form action="{{ route('inscripcion.destroy', $value->id) }}" method="post" class="text-center">
+                        <a class="btn btn-sm btn-primary" href="{{ route('inscripcion.show', $value->id) }}" >{{ "Pagar mensualidad del año {$value->anio}" }}</a>
+                        {{csrf_field()}}
+                        <br><br>
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button class="btn btn-sm btn-danger" type="submit">{{ "Borrar la inscripción del año {$value->anio}" }}</button>
+                      </form>                        
+                    @endif
                   </p>
                   <br>
                 </div>

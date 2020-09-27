@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('content_header')
-    <h2>Inscripción del año {{ date('Y') }}</h2>
+    <h2>Inscripción del año {{ date("Y", strtotime(date('Y-m-d') . "+ 1 year")) }}</h2>
     @if (count($errors) > 0)
       <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -29,7 +29,7 @@
         </div>
         
         <div class="card-body">
-            <form method="POST" action="{{ route('inscripcion.store') }}"  role="form">
+            <form method="POST" action="{{ route('inscripcion.store_siguiente') }}"  role="form">
               {{ csrf_field() }}
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">

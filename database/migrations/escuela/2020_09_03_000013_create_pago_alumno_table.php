@@ -17,6 +17,7 @@ class CreatePagoAlumnoTable extends Migration
             $table->bigIncrements('id');
             $table->decimal('monto', 11, 2);
             $table->year("anio");
+            $table->smallInteger('padre_id')->default(0);
 
             $table->unsignedBigInteger('alumno_id');
             $table->foreign('alumno_id')->references('id')->on('alumno');

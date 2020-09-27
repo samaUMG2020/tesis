@@ -50,7 +50,7 @@
                         <h3>Alumnos: {{ $value->cantidad }}</h3>
                         <p>{{ $value->nombre }}</p>
                       </div>
-                      <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                      <a href="#" class="small-box-footer">Administrar calificaciones <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                 @endforeach

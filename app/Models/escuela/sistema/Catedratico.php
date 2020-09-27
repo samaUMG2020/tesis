@@ -26,6 +26,10 @@ class Catedratico extends Model
         'codigo', 'nombre_completo', 'persona_id', 'activo'
     ];
 
+    protected $casts = [
+        'activo' => 'boolean'
+    ];
+
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'persona_id', 'id');

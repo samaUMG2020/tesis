@@ -13,6 +13,10 @@ class AlumnoGrado extends Model
         'anio', 'grado_seccion_id', 'alumno_id', 'activo'
     ];
 
+    protected $casts = [
+        'activo' => 'boolean'
+    ];
+
     public function grado_seccion()
     {
         return $this->belongsTo(GradoSeccion::class, 'grado_seccion_id', 'id');

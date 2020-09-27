@@ -13,10 +13,13 @@ class PagoAlumno extends Model
     const Proximo = 'Próximo Año';
     const Actual = 'Año Actual';
 
+    const MontoI = 200;
+    const MontoM = 100;
+
     protected $table = 'pago_alumno';
 
     protected $fillable = [
-        'monto', 'alumno_id', 'grado_seccion_id', 'mes_id', 'tipo_pago_alumno_id', 'anio'
+        'monto', 'alumno_id', 'grado_seccion_id', 'mes_id', 'tipo_pago_alumno_id', 'anio', 'padre_id'
     ];
 
     public function alumno()

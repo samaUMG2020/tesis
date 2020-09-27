@@ -25,7 +25,13 @@ class Alumno extends Model
      */
 
     protected $fillable = [
-        'codigo', 'nombre_completo', 'persona_id', 'activo', 'graduado'
+        'codigo', 'nombre_completo', 'persona_id', 'activo', 'graduado', 'fin_ciclo'
+    ];
+
+    protected $casts = [
+        'activo' => 'boolean',
+        'graduado' => 'boolean',
+        'fin_ciclo' => 'boolean'
     ];
 
     public function persona()
