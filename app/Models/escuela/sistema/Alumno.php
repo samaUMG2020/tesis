@@ -2,7 +2,6 @@
 
 namespace App\Models\escuela\sistema;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
