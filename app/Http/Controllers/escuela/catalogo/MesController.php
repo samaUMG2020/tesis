@@ -15,9 +15,7 @@ class MesController extends Controller
      */
     public function index()
     {
-        $values = Mes::all();
-
-        return response()->json($values);
+        //
     }
 
     /**
@@ -38,16 +36,7 @@ class MesController extends Controller
      */
     public function store(Request $request)
     {
-        /*$this->validate(
-            $request,
-            [
-                'nombre' => 'required|max:1|unique:mes,nombre',
-            ]
-        );*/
-
-        $dato = Mes::create($request->all());
-
-        return response()->json(['Registro nuevo' => $dato, 'Mensaje' => 'Felicidades insertaste']);
+        //
     }
 
     /**
@@ -58,7 +47,7 @@ class MesController extends Controller
      */
     public function show(Mes $me)
     {
-        return response()->json(['Registro de la busqueda' => $me, 'Mensaje' => 'Felicidades encontraste un registro']);
+        //
     }
 
     /**
@@ -81,10 +70,7 @@ class MesController extends Controller
      */
     public function update(Request $request, Mes $me)
     {
-        $me->nombre = $request->nombre;
-        $me->save();
-
-        return response()->json(['Registro editado' => $me, 'Mensaje' => 'Felicidades editaste']);
+        //
     }
 
     /**
@@ -95,7 +81,6 @@ class MesController extends Controller
      */
     public function destroy(Mes $me)
     {
-        $me->delete();
-        return response()->json(['Registro eliminado' => $me, 'Mensaje' => 'Felicidades eliminaste']);
+        //
     }
 }

@@ -12,7 +12,6 @@ class PagoCatedratico extends Model
     protected $fillable = [
         'monto', 'anio', 'catedratico_id', 'mes_id'
     ];
-
     
     public function catedratico()
     {
@@ -22,6 +21,4 @@ class PagoCatedratico extends Model
     {
         return $this->belongsTo(Mes::class, 'mes_id', 'id');
     }
-    
-    
 }

@@ -70,15 +70,7 @@ class AlumnoGradoController extends Controller
      */
     public function store(Request $request)
     {
-        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
-        $alumno = Alumno::find($request->alumno_id);
-
-        $insert = new AlumnoGrado();
-        $insert->anio = $request->anio;
-        $insert->grado_seccion_id = $request->grado_seccion_id;
-        $insert->alumno_id = $request->alumno_id;
-        $insert->save();
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+        //
     }
 
     /**
@@ -123,7 +115,6 @@ class AlumnoGradoController extends Controller
      */
     public function destroy(AlumnoGrado $alumnoGrado)
     {
-        $alumnoGrado->delete();
-        return response()->json(['Registro eliminado' => $alumnoGrado, 'Mensaje' => 'Felicidades eliminaste']);  
+        //
     }
 }

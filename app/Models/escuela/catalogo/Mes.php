@@ -2,6 +2,7 @@
 
 namespace App\Models\escuela\catalogo;
 
+use App\Models\escuela\sistema\PagoCatedratico;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
@@ -27,4 +28,9 @@ class Mes extends Model
     protected $fillable = [
         'nombre'
     ];
+
+    public function pagos_catedraticos()
+    {
+        return $this->hasMany(PagoCatedratico::class, 'mes_id', 'id');
+    }
 }

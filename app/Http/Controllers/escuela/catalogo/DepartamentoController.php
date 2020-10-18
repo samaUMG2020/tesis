@@ -15,8 +15,7 @@ class DepartamentoController extends Controller
      */
     public function index()
     {
-        $values =Departamento::get(); 
-        return response()->json(['Consulta realizada', $values, 'Mensaje' => 'Consultaste']);
+        //
     }
 
     /**
@@ -37,10 +36,7 @@ class DepartamentoController extends Controller
      */
     public function store(Request $request)
     {
-       $dato = Departamento::create($request->all());
-
-        return response()->json([ 'Registro nuevo'=> $dato, 'Mensaje' =>'Felicidades insertaste']);
-
+        //
     }
 
     /**
@@ -74,10 +70,7 @@ class DepartamentoController extends Controller
      */
     public function update(Request $request, Departamento $departamento)
     {
-        $departamento->nombre = $request->nombre;
-        $departamento->save();
-
-        return response()->json(['Registro editado' => $departamento, 'Mensaje' => 'Felicidades editaste']);
+        //
     }
 
     /**
@@ -88,7 +81,6 @@ class DepartamentoController extends Controller
      */
     public function destroy(Departamento $departamento)
     {
-        $departamento->delete();
-        return response()->json(['Registro eliminado' => $departamento, 'Mensaje' => 'Felicidades eliminaste']);
+        //
     }
 }

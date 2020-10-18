@@ -35,7 +35,6 @@ Route::resource('alumno', 'escuela\sistema\AlumnoController'); //REALIZADO EL 12
 Route::resource('alumnoGrado', 'escuela\sistema\alumnoGradoController'); //REALIZADO EL 12/09
 Route::resource('catedratico', 'escuela\sistema\CatedraticoController'); //REALIZADO EL 12/09
 Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController'); //REALIZADO EL 13/09
-Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController'); //REALIZADO EL 13/09
 Route::resource('fondo','escuela\sistema\fondoController'); //REALIZADO EL 13/09
 Route::resource('nota','escuela\sistema\notaController'); //REALIZADO EL 13/09
 Route::name('nota.asignar')->get('asignar/nota/{grado_seccion_id}/{curso_id}', 'escuela\sistema\NotaController@asignar'); //REALIZADO EL 14/09

@@ -126,7 +126,16 @@ class CursoGSController extends Controller
                     'curso_g_s.grado_seccion_id AS grado_seccion_id',
                     'curso.nombre AS nombre',
                     DB::RAW('CONCAT(grado.nombre," ",carrera.nombre," - Sección ",seccion.nombre) AS nombre_grado_seccion'),
-                    DB::RAW("(SELECT COUNT(*) FROM alumno_grado WHERE alumno_grado.grado_seccion_id = grado_seccion.id AND alumno_grado.anio = {$anio_actual}) AS cantidad")
+                    DB::RAW("(SELECT COUNT(*) FROM alumno_grado WHERE alumno_grado.grado_seccion_id = grado_seccion.id AND alumno_grado.anio = {$anio_actual}) AS cantidad"),
+                    DB::RAW("
+                        (
+                            SELECT catedratico.nombre_completo 
+                            FROM catedratico_curso 
+                            INNER JOIN catedratico ON catedratico.id = catedratico_curso.catedratico_id 
+                            WHERE catedratico_curso.curso_g_s_id = curso_g_s.id AND catedratico_curso.activo = true
+                            LIMIT 1
+                        ) 
+                        AS catedratico")
                 )
                 ->where('curso_g_s.grado_seccion_id', $cursoG)
                 ->get();

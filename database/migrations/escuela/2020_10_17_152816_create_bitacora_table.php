@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFondosTable extends Migration
+class CreateBitacoraTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateFondosTable extends Migration
      */
     public function up()
     {
-        Schema::create('fondos', function (Blueprint $table) {
+        Schema::create('bitacora', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->decimal('cantidad', 11,2);
-            $table->year('anio');
+            $table->string('tabla');
+            $table->bigInteger('tabla_id');
+            $table->string('accion');
+            $table->longText('descripcion');
 
-            $table->unsignedBigInteger('tipo_fondo_id');
-            $table->foreign('tipo_fondo_id')->references('id')->on('tipo_fondo');
+            $table->unsignedBigInteger('usuario_id');
+            $table->foreign('usuario_id')->references('id')->on('usuario');
 
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateFondosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fondos');
+        Schema::dropIfExists('bitacora');
     }
 }

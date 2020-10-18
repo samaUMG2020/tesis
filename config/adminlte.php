@@ -251,6 +251,11 @@ return [
                 
                 ],
                 [
+                    'text' => 'Mensualidad',
+                    'url'  => 'mensualidad',
+
+                ],
+                [
                     'text' => 'Pago Catedrático',
                     'url'  => 'pagoCatedratico',
                 
@@ -266,6 +271,7 @@ return [
         [
             'text'    => 'Usuarios',
             'icon'    => 'fas fa-fw fa-user',
+            'url'  => 'usuario'
         ],
     ],
 
@@ -343,12 +349,56 @@ return [
         ],
         [
             'name' => 'Chartjs',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Highcharts',
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/highcharts/6.0.6/highcharts.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Fusioncharts',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdn.jsdelivr.net/npm/fusioncharts@3.12.2/fusioncharts.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Echarts',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.min.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'Frappe',
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/frappe-charts@1.1.0/dist/frappe-charts.min.iife.js',
                 ],
             ],
         ],

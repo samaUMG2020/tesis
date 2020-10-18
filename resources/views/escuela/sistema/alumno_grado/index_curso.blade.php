@@ -45,15 +45,16 @@
             <div class="row">
                 <div class="col-md-8 col-xs-12 text-center">
                     <h1>Cursos</h1>
-                    <div class="row d-flex align-items-stretch bg-info">
+                    <div class="row d-flex align-items-stretch" style="background-color: #d2d6de;">
                         <div class="col-md-12 col-xs-12"><br></div>
                         @foreach ($values as $value)
                         <div class="col-md-6 col-xs-12">
                             <div class="small-box bg-success">
                             <div class="inner text-center">
                                 <h1>{{ $value->nombre }}</h1>
+                                <h4 class="badge badge-info">{{ $value->catedratico ? $value->catedratico : 'CURSO NO ASIGNADO' }}</h4>
                             </div>
-                            <a href="{{ route('nota.asignar', ['grado_seccion_id' => $value->grado_seccion_id, 'curso_id' => $value->id]) }}" class="small-box-footer">Agregar notas <i class="fa fa-arrow-circle-right"></i></a>
+                              <a href="{{ route('nota.asignar', ['grado_seccion_id' => $value->grado_seccion_id, 'curso_id' => $value->id]) }}" class="btn bg-navy btn-flat margin small-box-footer">Agregar notas <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         @endforeach

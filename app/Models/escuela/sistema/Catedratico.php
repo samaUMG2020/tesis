@@ -11,6 +11,7 @@ class Catedratico extends Model
 
     protected $searchable = [
         'columns' => [
+            'catedratico.codigo' => 15,
             'catedratico.nombre_completo' => 10,
         ]
     ];
@@ -33,5 +34,10 @@ class Catedratico extends Model
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'persona_id', 'id');
+    }
+
+    public function cursos()
+    {
+        return $this->hasMany(CatedraticoCurso::class, 'catedratico_id', 'id');
     }
 }

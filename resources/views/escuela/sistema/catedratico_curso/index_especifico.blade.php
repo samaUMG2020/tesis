@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('content_header')
     <h2>
-      Asignar cursos al catedrático  
+      Cursos del Catedrático {{ $catedratico->nombre_completo }}  
     </h2>
 
     @if (count($errors) > 0)
@@ -54,21 +54,8 @@
           <form method="POST" action="{{ route('catedraticoCurso.store') }}"  role="form">
             {{ csrf_field() }}
             <input name="pantalla" type="hidden" value="{{ $pantalla }}">
+            <input name="catedratico_id" type="hidden" value="{{ $catedratico->id }}">
             <div class="row">
-              <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                  <label for="catedratico_id">Catedrático</label>
-                  <br>
-                  <select name="catedratico_id" id="input-catedratico_id" class="js-example-basic-single form-control form-control-alternative{{ $errors->has('catedratico_id') ? ' is-invalid' : '' }}">
-                      <option style="color: black;" value="">Seleccionar uno por favor</option>
-                      @foreach ($catedraticos as $catedratico)
-                          <option style="color: black;"
-                          value="{{ $catedratico->id }}"
-                          {{ ($catedratico->id == old('catedratico_id')) ? 'selected' : '' }}>{{ $catedratico->nombre_completo }}</option>
-                      @endforeach
-                  </select>
-                </div>
-              </div>
               <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                   <label for="curso_g_s_id">Curso</label>
@@ -103,7 +90,6 @@
           <table class="table table-head-fixed">
             <thead>
               <tr>
-                <th>Catedrático</th>
                 <th>Curso</th>
                 <th>Estado</th>
                 <th>Fecha de ingreso</th>
@@ -113,21 +99,14 @@
               @if($values->count())  
                 @foreach($values as $value)  
                 <tr>
-                  <td>{{$value->catedratico->nombre_completo}}</td>
                   <td>{{$value->curso_g_s->nombre_completo}}</td>
-                  <td>
-                      <form action="{{ route('catedraticoCurso.destroy', $value) }}" method="post">
-                        {{csrf_field()}}
-                        <input name="_method" type="hidden" value="DELETE">
-                        <button class="btn btn-sm {{ $value->activo ? 'btn-info' : 'btn-success' }}" type="submit">{{ $value->activo ? 'DESACTIVAR' : 'ACTIVAR' }}</button>
-                      </form>
-                  </td>
+                  <td>{{$value->activo ? 'ACTIVO' : 'INACTIVO'}}</td>
                   <td>{{$value->created_at}}</td>           
                </tr>
                @endforeach 
                @else
                <tr>
-                <td colspan="4">
+                <td colspan="3">
                   <div class="callout callout-danger"><h5>Mensaje</h5><p>¡No hay información para mostrar!</p></div>
                 </td>
               </tr>
