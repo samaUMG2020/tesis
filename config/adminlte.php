@@ -179,7 +179,7 @@ return [
             'icon'    => 'fas fa-cog',
             'submenu' => [
                 [
-                    'icon' => 'fas fa-apple-alt',
+                  
                     'text' => 'Bimestre',
                     'url'  => 'bimestre',
                 ],
