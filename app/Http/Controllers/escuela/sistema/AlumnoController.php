@@ -16,10 +16,10 @@ class AlumnoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('administrador');
+        //$this->middleware('administrador');
         //$this->middleware('director');
-        $this->middleware('secretaria');
-        $this->middleware('catedratico');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
     }
     
     /**
@@ -125,14 +125,7 @@ class AlumnoController extends Controller
      */
     public function show(Alumno $alumno)
     {
-        try {
-
-        } catch (\Exception $th) {
-            if ($th instanceof QueryException)
-                return redirect()->route('alumno.index')->with('danger', 'Error en la base de datos');
-            else
-                return redirect()->route('alumno.index')->with('danger', $th->getMessage());
-        }
+        //
     }
     
 
@@ -147,7 +140,6 @@ class AlumnoController extends Controller
         try {
             $municipios = Municipio::all();
             $persona = Persona::find($alumno->persona_id);
-            
 
             return view('escuela.sistema.alumno.edit', ['alumno' => $alumno, 'municipios' => $municipios, 'persona' => $persona]);
         } catch (\Exception $th) {
