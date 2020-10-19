@@ -218,7 +218,7 @@ return [
             ],
         ],
         [
-            'text'    => 'Sistema',
+            'text'    => 'Académico',
             'icon'    => 'fas fa-archway',
             'submenu' => [
                 [
@@ -229,17 +229,27 @@ return [
                     'text' => 'Alumno Grado',
                     'url'  => 'alumnoGrado',
                 ],
-                
                 [
                     'text' => 'Catedrático',
                     'url'  => 'catedratico',
-                
+
                 ],
                 [
                     'text' => 'Catedrático Curso',
                     'url'  => 'catedraticoCurso',
-                
+
                 ],
+                [
+                    'text' => 'Promedio',
+                    'url'  => 'promedio',
+
+                ],
+            ],
+        ],
+        [
+            'text'    => 'Pagos',
+            'icon'    => 'fas fa-money-bill',
+            'submenu' => [
                 [
                     'text' => 'Fondo',
                     'url'  => 'fondo',
@@ -260,12 +270,13 @@ return [
                     'url'  => 'pagoCatedratico',
                 
                 ],
-                [
-                    'text' => 'Promedio',
-                    'url'  => 'promedio',
-                
-                ],
             ],
+        ],
+        ['header' => 'Reportes del sistema'],
+        [
+            'text'    => 'Reportes',
+            'icon'    => 'far fa-file-pdf',
+            'url'  => 'usuario'
         ],
         ['header' => 'Acceso al sistema'],
         [

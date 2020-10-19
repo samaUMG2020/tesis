@@ -37,8 +37,9 @@ Route::resource('alumnoGrado', 'escuela\sistema\alumnoGradoController')->except(
 Route::resource('catedratico', 'escuela\sistema\CatedraticoController'); //REALIZADO EL 14/09
 Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController')->except(['create, edit, update']); //REALIZADO EL 15/09
 Route::resource('catedraticoCurso','escuela\sistema\CatedraticoCursoController')->except(['create, edit, update']); //REALIZADO EL 15/09
-Route::resource('fondo','escuela\sistema\fondoController')->except(['create, show, edit, update']); //REALIZADO EL 15/09
-Route::resource('nota','escuela\sistema\notaController')->except(['index, create, show, edit, update, destroy']); //REALIZADO EL 15/09
+Route::resource('fondo','escuela\sistema\FondoController')->except(['create, show, edit, update']); //REALIZADO EL 15/09
+Route::resource('nota', 'escuela\sistema\NotaController')->except(['index, create, show, edit, update, destroy']); //REALIZADO EL 15/09
+Route::name('nota.asignar')->get('asignar/nota/{grado_seccion_id}/{curso_id}', 'escuela\sistema\NotaController@asignar'); //REALIZADO EL 
 Route::resource('inscripcion', 'escuela\sistema\InscripcionController')->except(['edit, update']); //REALIZADO EL 16/09
 Route::name('inscripcion.create_siguiente')->get('create_siguiente/inscripcion', 'escuela\sistema\InscripcionController@create_siguiente'); //REALIZADO EL 
 Route::name('inscripcion.store_siguiente')->post('store_siguiente/inscripcion', 'escuela\sistema\InscripcionController@store_siguiente'); //REALIZADO EL 
@@ -47,3 +48,7 @@ Route::resource('pagoCatedratico','escuela\sistema\pagoCatedraticoController')->
 Route::resource('persona','escuela\sistema\PersonaController')->except(['show']); //REALIZADO EL 17/09
 Route::resource('municipio','escuela\catalogo\MunicipioController'); //REALIZADO EL 17/09
 Route::resource('promedio','escuela\sistema\PromedioController')->except(['create, store, show, edit, update, destroy']); //REALIZADO EL 17/09
+
+Route::name('comprobante.inscripcion')->get('comprobante/inscripcion/{pago_alumno}', 'ComprobanteController@inscripcion');
+Route::name('comprobante.mensualidad')->get('comprobante/mensualidad/{pago_alumno}', 'ComprobanteController@mensualidad');
+Route::name('comprobante.pago_catedratico')->get('comprobante/pago_catedratico/{mes}', 'ComprobanteController@pago_catedratico');

@@ -47,6 +47,12 @@
                           <div class="inner text-center">
                               <h1>{{ $value->nombre }}</h1>
                               <h4 class="badge badge-info">Pagos realizados {{ $value->pagos_catedraticos->where('anio', date('Y'))->count() }}</h4>
+                              <br><br>
+                              @if ($value->pagos_catedraticos->where('anio', date('Y'))->count() > 0)
+                                <a class="btn btn-sm btn-dark" href="{{ route('comprobante.pago_catedratico', $value->id) }}" target="_blank">Imprimir</a> 
+                              @else
+                                <br>
+                              @endif
                           </div>
                             <a href="{{ route('pagoCatedratico.show', $value->id) }}" class="btn bg-navy btn-flat margin small-box-footer">Registrar pagos<i class="fa fa-arrow-circle-right"></i></a>
                           </div>

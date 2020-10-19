@@ -80,6 +80,10 @@
                         <br><br>
                         <input name="_method" type="hidden" value="DELETE">
                         <button class="btn btn-sm btn-danger" type="submit">{{ "Borrar la inscripción del año {$value->anio}" }}</button>
+                        <br><br>
+                        @if ($value->activo)
+                          <a class="btn btn-sm btn-dark" href="{{ route('comprobante.inscripcion', $value->id) }}" target="_blank">{{ "Comprobante de inscripción del año {$value->anio}" }}</a>
+                        @endif
                       </form>                        
                     @endif
                   </p>

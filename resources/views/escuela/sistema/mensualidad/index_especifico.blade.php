@@ -128,6 +128,7 @@
                 <th>Mes</th>
                 <th>Monto</th>
                 <th>Fecha de ingreso</th>
+                <th>Comprobante</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +138,10 @@
                   <td>{{$value->id}}</td>
                   <td>{{$value->mes}}</td>
                   <td>{{"Q ".number_format($value->monto,2,'.',',')}}</td>
-                  <td>{{$value->created_at}}</td>           
+                  <td>{{$value->created_at}}</td>  
+                  <td>
+                    <a class="btn btn-sm btn-dark" href="{{ route('comprobante.mensualidad', $value->id) }}" target="_blank">Imprimir</a>
+                  </td>         
                </tr>
                @endforeach 
                @else
