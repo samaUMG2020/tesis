@@ -39,6 +39,7 @@ class AlumnoGradoController extends Controller
                 DB::RAW('CONCAT(grado.nombre," ",carrera.nombre," - Sección ",seccion.nombre) AS nombre'),
                 DB::RAW("(SELECT COUNT(*) FROM alumno_grado WHERE alumno_grado.grado_seccion_id = grado_seccion.id AND alumno_grado.anio = {$anio_actual}) AS cantidad")
             )
+            ->where(DB::RAW('(SELECT COUNT(*) FROM curso_g_s WHERE curso_g_s.grado_seccion_id = grado_seccion.id)'), '>', 0)
             ->orderBy('grado.nombre')
             ->orderBy('seccion.nombre')
             ->get();
@@ -70,15 +71,7 @@ class AlumnoGradoController extends Controller
      */
     public function store(Request $request)
     {
-        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
-        $alumno = Alumno::find($request->alumno_id);
-
-        $insert = new AlumnoGrado();
-        $insert->anio = $request->anio;
-        $insert->grado_seccion_id = $request->grado_seccion_id;
-        $insert->alumno_id = $request->alumno_id;
-        $insert->save();
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+        //
     }
 
     /**
@@ -87,7 +80,7 @@ class AlumnoGradoController extends Controller
      * @param  \App\Models\escuela\sistema\AlumnoGrado  $alumnoGrado
      * @return \Illuminate\Http\Response
      */
-    public function show(AlumnoGrado $alumnoGrado)
+    public function show($alumnoGrado)
     {
         //
     }
@@ -112,14 +105,7 @@ class AlumnoGradoController extends Controller
      */
     public function update(Request $request, AlumnoGrado $alumnoGrado)
     {
-        $grado_seccion = GradoSeccion::find($request->grado_seccion_id);
-        $alumno = Alumno::find($request->alumno_id);
-
-        $alumnoGrado->anio = $request->anio;
-        $alumnoGrado->grado_seccion_id = $request->grado_seccion_id;
-        $alumnoGrado->alumno_id = $request->alumno_id;
-        $alumnoGrado->save();
-        return response()->json(['Registro editado' => $alumnoGrado, 'Mensaje' => 'Felicidades editate']);
+        //
     }
 
     /**
@@ -130,7 +116,6 @@ class AlumnoGradoController extends Controller
      */
     public function destroy(AlumnoGrado $alumnoGrado)
     {
-        $alumnoGrado->delete();
-        return response()->json(['Registro eliminado' => $alumnoGrado, 'Mensaje' => 'Felicidades eliminaste']);  
-      }
+        //
+    }
 }

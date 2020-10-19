@@ -22,6 +22,4 @@ class Promedio extends Model
     {
         return $this->belongsTo(Curso::class, 'curso_id', 'id');
     }
-
-
 }

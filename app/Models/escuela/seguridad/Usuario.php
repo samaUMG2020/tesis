@@ -2,6 +2,7 @@
 
 namespace App\Models\escuela\seguridad;
 
+use App\Models\escuela\sistema\Persona;
 use Nicolaslopezj\Searchable\SearchableTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -49,5 +50,15 @@ class Usuario extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'persona_id', 'id');
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'rol_id', 'id');
     }
 }

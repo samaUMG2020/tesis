@@ -3,7 +3,6 @@
 namespace App\Models\escuela\catalogo;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class GradoSeccion extends Model

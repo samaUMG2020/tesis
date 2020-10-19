@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\escuela\catalogo\Curso;
+use Illuminate\Database\QueryException;
 use App\Models\escuela\catalogo\CursoGS;
 use App\Models\escuela\sistema\Catedratico;
 use App\Models\escuela\sistema\CatedraticoCurso;
-use Illuminate\Http\Request;
 
 class CatedraticoCursoController extends Controller
 {
@@ -16,11 +17,25 @@ class CatedraticoCursoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = CatedraticoCurso::with('curso_g_s.curso','catedratico')->get();
+        try {
+            $cursos = $this->cursos_disponibles();
+            $catedraticos = Catedratico::where('activo', true)->get();
+            $pantalla = 'general';
 
-        return response()->json($values);
+            if ($request->has('buscar'))
+                $values = CatedraticoCurso::search($request->buscar)->orderBy('created_at', 'DESC')->paginate(15);
+            else
+                $values = CatedraticoCurso::orderBy('created_at', 'DESC')->paginate(15);
+
+            return view('escuela.sistema.catedratico_curso.index ', ['values' => $values, 'cursos' => $cursos, 'catedraticos' => $catedraticos, 'pantalla' => $pantalla]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', $th->getMessage());
+        }
     }
 
     /**
@@ -41,18 +56,46 @@ class CatedraticoCursoController extends Controller
      */
     public function store(Request $request)
     {
-        $cursoGS = CursoGS::find($request->curso_g_s_id) ;
-        $cursoGS = Curso::find($request->curso_id);
-        $catedratico = Catedratico::find($request->catedratico_id);
+        $this->validate(
+            $request,
+            [
+                'curso_g_s_id' => 'required|integer|exists:curso_g_s,id',
+                'catedratico_id' => 'required|integer|exists:catedratico,id',
+                'pantalla' => 'required|starts_with:especifico,general'
+            ]
+        );
 
-        $insert =new CatedraticoCurso();
-       // $insert->nombre_completo = "{$cursoGS->nombre_completo}{$catedratico->nombre} {$catedratico->apellido} "; 
-        $insert->curso_g_s_id = $request->curso_g_s_id;
-        $insert->catedratico_id = $request->catedratico_id;
-        $insert->save();
+        try {
 
-        return response()->json(['Registro ingresado' => $insert, 'Mensaje' => 'Felicidades ingresaste']);
+            DB::beginTransaction();
 
+            CatedraticoCurso::where('curso_g_s_id', $request->curso_g_s_id)->update(['activo' => false]);
+            $catedratico_curso = CatedraticoCurso::where('curso_g_s_id', $request->curso_g_s_id)->where('catedratico_id', $request->catedratico_id)->first();
+
+            if(is_null($catedratico_curso)) {
+                $catedratico_curso = new CatedraticoCurso();
+                $catedratico_curso->curso_g_s_id = $request->curso_g_s_id;
+                $catedratico_curso->catedratico_id = $request->catedratico_id;
+            } 
+
+            $catedratico_curso->activo = true;
+            $catedratico_curso->save();
+
+            DB::commit();
+
+            if($request->pantalla == 'especifico') {
+                return redirect()->route('catedraticoCurso.show', $catedratico_curso->catedratico_id)->with('success', '¡El registro fue creado exitosamente!');
+            } else if($request->pantalla == 'general') {
+                return redirect()->route('catedraticoCurso.index')->with('success', '¡El registro fue creado exitosamente!');
+            }
+            
+        } catch (\Exception $th) {
+            DB::rollback();
+            if ($th instanceof QueryException)
+                return redirect()->route('home.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home.index')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -61,9 +104,19 @@ class CatedraticoCursoController extends Controller
      * @param  \App\Models\escuela\sistema\CatedraticoCurso  $catedraticoCurso
      * @return \Illuminate\Http\Response
      */
-    public function show(CatedraticoCurso $catedraticoCurso)
+    public function show(Catedratico $catedraticoCurso)
     {
-        //
+        try {
+            $cursos = $this->cursos_disponibles();
+            $values = CatedraticoCurso::where('catedratico_id', $catedraticoCurso->id)->paginate(10);
+            $pantalla = 'especifico';
+            return view('escuela.sistema.catedratico_curso.index_especifico ', ['values' => $values, 'cursos' => $cursos, 'catedratico' => $catedraticoCurso, 'pantalla' => $pantalla]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('catedratico.index')->with('danger', 'Error ene la base de datos');
+            else
+                return redirect()->route('catedratico.index')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -86,16 +139,7 @@ class CatedraticoCursoController extends Controller
      */
     public function update(Request $request, CatedraticoCurso $catedraticoCurso)
     {
-        $cursoGS = CursoGS::find($request->cursoGS_id) ;
-        $catedratico = Catedratico::find($request->catedratico_id);
-
-        $catedraticoCurso->nombre_completo = "{$cursoGS->nombre_completo}{$catedratico->nombre} {$catedratico->apellido} "; 
-        $catedraticoCurso->cursoGSpaerson_id = $request->cursoGS_id;
-        $catedraticoCurso->catedratico_id = $request->catedratico_id;
-        $catedraticoCurso->save();
-
-        return response()->json(['Registro editado' => $catedraticoCurso, 'Mensaje' => 'Felicidades editaste']);
-
+        //
     }
 
     /**
@@ -106,7 +150,36 @@ class CatedraticoCursoController extends Controller
      */
     public function destroy(CatedraticoCurso $catedraticoCurso)
     {
-        $catedraticoCurso->delete();
-        return response()->json(['Registro eliminado' => $catedraticoCurso, 'Mensaje' => 'Felicidades eliminaste']);  
+        try {
+
+            if($catedraticoCurso->activo) {
+                $catedraticoCurso->activo = false;
+            } else {
+                CatedraticoCurso::where('curso_g_s_id', $catedraticoCurso->curso_g_s_id)->update(['activo' => false]);
+                $catedraticoCurso->activo = true;
+            }
+            
+            $catedraticoCurso->save();
+
+            return redirect()->route('catedraticoCurso.index')->with('info', '¡La actualización de estado fue exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('catedraticoCurso.index')->with('warning', 'Error en la base de datos');
+            else
+                return redirect()->route('catedraticoCurso.index')->with('warning', 'Error en el controlador');
+        } 
+    }
+
+    private function cursos_disponibles() 
+    {
+        return DB::table('curso_g_s')
+        ->select('curso_g_s.id AS id', 'curso_g_s.nombre_completo AS nombre_completo')
+        ->whereNotExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('catedratico_curso')
+                ->where('catedratico_curso.activo', true)
+                ->whereRaw('catedratico_curso.curso_g_s_id = curso_g_s.id');
+        })
+        ->get();
     }
 }

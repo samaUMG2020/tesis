@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Mes;
-use App\Models\escuela\sistema\Catedratico;
+use Illuminate\Database\QueryException;
 use App\Models\escuela\sistema\PagoCatedratico;
-use Illuminate\Http\Request;
 
 class PagoCatedraticoController extends Controller
 {
@@ -17,9 +18,15 @@ class PagoCatedraticoController extends Controller
      */
     public function index()
     {
-        $values = PagoCatedratico::get();
-
-        return response()->json($values);
+        try {
+            $values = Mes::where('id','!=',13)->orderBy('id', 'ASC')->get();
+            return view('escuela.sistema.pago_catedratico.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('home')->with('danger', 'Error en el controlador');
+        }
      }
 
     /**
@@ -40,19 +47,62 @@ class PagoCatedraticoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate(
+            $request,
+            [
+                'catedratico_id.*' => 'required|integer|exists:catedratico,id',
+                'mes_id' => 'required|integer|exists:mes,id',
+                'monto.*' => 'required|numeric|between:0,20000'
+            ],
+            [
+                'catedratico_id.*.required' => 'El catedrático a quien se le realizará el pago es obligatorio',
+                'catedratico_id.*.integer' => 'El código del catedrático no tiene formato correcto',
+                'catedratico_id.*.exists' => 'El código del catedrático no se encuentra registrado en la base de datos',
+
+                'mes_id.required' => 'El mes en que se realizará el pago es obligatorio',
+                'mes_id.integer' => 'El mes no tiene formato correcto',
+                'mes_id.exists' => 'El mes no se encuentra registrado en la base de datos',
+
+                'monto.*.required' => 'Es necesario el monto del pago a realizar',
+                'monto.*.numeric' => 'Solo se aceptan números en los montos de pago',
+                'monto.*.between' => 'En el monto de pago solo puede ser :min o menor que :max quetzales'
+            ]
+        );
         
-        $catedratico = Catedratico::find($request->catedratico_id);
-        $mes = Mes::find($request->mes_id);
+        try {
+            DB::beginTransaction();
 
-        $insert = new PagoCatedratico();
-        $insert ->monto = $request->monto;
-        $insert ->anio = $request->anio;
-        $insert ->catedratico_id = $request->catedratico_id;
-        $insert ->mes_id = $request->mes_id;
-        $insert->save();
+            $anio_actual = date('Y');
+            $mes = Mes::find($request->mes_id);
 
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
-    
+            for ($i = 0; $i < count($request->catedratico_id); $i++) {
+                $pago_catedratico = PagoCatedratico::where('catedratico_id', $request->catedratico_id[$i])
+                    ->where('mes_id', $mes->id)
+                    ->where('anio', $anio_actual)
+                    ->first();
+
+                if(is_null($pago_catedratico)) {
+                    $pago_catedratico = new PagoCatedratico();
+                    $pago_catedratico->catedratico_id = $request->catedratico_id[$i];
+                    $pago_catedratico->mes_id = $mes->id;
+                    $pago_catedratico->anio = $anio_actual;
+                }
+
+                $pago_catedratico->monto = $request->monto[$i];
+                $pago_catedratico->save();
+            }
+
+            DB::commit();
+
+            return redirect()->route('pagoCatedratico.show', $mes->id)->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            DB::rollback();
+            if ($th instanceof QueryException
+            )
+            return redirect()->route('pagoCatedratico.show', $request->grado_seccion_id)->with('danger', $th->getMessage());
+            else
+                return redirect()->route('pagoCatedratico.show', $request->grado_seccion_id)->with('danger', "Error al ingresar");
+        }
     }
 
     /**
@@ -61,9 +111,25 @@ class PagoCatedraticoController extends Controller
      * @param  \App\Models\escuela\sistema\PagoCatedratico  $pagoCatedratico
      * @return \Illuminate\Http\Response
      */
-    public function show(PagoCatedratico $pagoCatedratico)
+    public function show(Mes $pagoCatedratico)
     {
-        //
+        try {
+            $anio_actual = date('Y');
+            $pagos = DB::table('catedratico')
+                ->select(
+                        'catedratico.id AS catedratico_id',
+                        'catedratico.nombre_completo AS nombre_completo',
+                        DB::RAW("(SELECT pago_catedratico.monto FROM pago_catedratico WHERE pago_catedratico.catedratico_id = catedratico.id AND pago_catedratico.mes_id = {$pagoCatedratico->id} AND pago_catedratico.anio = {$anio_actual}) AS monto")
+                    )
+                ->where('catedratico.activo', true)
+                ->get();
+            return view('escuela.sistema.pago_catedratico.registrar ', ['pagos' => $pagos, 'mes' => $pagoCatedratico]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('pagoCatedratico.index')->with('danger', 'Error ene la base de datos');
+            else
+                return redirect()->route('pagoCatedratico.index')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -86,16 +152,7 @@ class PagoCatedraticoController extends Controller
      */
     public function update(Request $request, PagoCatedratico $pagoCatedratico)
     {
-        $catedratico = Catedratico::find($request->catedratico_id);
-        $mes = Mes::find($request->mes_id);
-        
-        $pagoCatedratico ->monto = $request->monto;
-        $pagoCatedratico ->anio = $request->anio;
-        $pagoCatedratico ->catedratico_id = $request->catedratico_id;
-        $pagoCatedratico ->mes_id = $request->mes_id;
-        $pagoCatedratico->save();
-        
-        return response()->json(['Registro nuevo' => $pagoCatedratico, 'Mensaje' => 'Felicidades editaste']);
+        //
     }
     /**
      * Remove the specified resource from storage.
@@ -106,8 +163,6 @@ class PagoCatedraticoController extends Controller
 
     public function destroy(PagoCatedratico $pagoCatedratico)
     {
-        $pagoCatedratico->delete();
-        return response()->json(['Registro eliminado' => $pagoCatedratico, 'Mensaje' =>  'Felicidades eliminaste']);
-
+        //
     }
 }

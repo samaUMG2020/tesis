@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\escuela\catalogo;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\escuela\catalogo\Curso;
+use Illuminate\Database\QueryException;
 use App\Models\escuela\catalogo\CursoGS;
 use App\Models\escuela\catalogo\GradoSeccion;
-use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 
 class CursoGSController extends Controller
 {
@@ -110,15 +111,48 @@ class CursoGSController extends Controller
      * @param  \App\Models\escuela\catalogo\CursoGS  $cursoGS
      * @return \Illuminate\Http\Response
      */
-    public function show(CursoGS $cursoGS)
+    public function show($cursoG)
     {
         try {
+            $anio_actual = date('Y');
+            $datos = DB::table('curso_g_s')
+                ->join('curso', 'curso_g_s.curso_id', 'curso.id')
+                ->join('grado_seccion', 'curso_g_s.grado_seccion_id', 'grado_seccion.id')
+                ->join('seccion', 'grado_seccion.seccion_id', 'seccion.id')
+                ->join('grado', 'grado_seccion.grado_id', 'grado.id')
+                ->join('carrera', 'grado.carrera_id', 'carrera.id')
+                ->select(
+                    'curso.id AS id',
+                    'curso_g_s.grado_seccion_id AS grado_seccion_id',
+                    'curso.nombre AS nombre',
+                    DB::RAW('CONCAT(grado.nombre," ",carrera.nombre," - Sección ",seccion.nombre) AS nombre_grado_seccion'),
+                    DB::RAW("(SELECT COUNT(*) FROM alumno_grado WHERE alumno_grado.grado_seccion_id = grado_seccion.id AND alumno_grado.anio = {$anio_actual}) AS cantidad"),
+                    DB::RAW("
+                        (
+                            SELECT catedratico.nombre_completo 
+                            FROM catedratico_curso 
+                            INNER JOIN catedratico ON catedratico.id = catedratico_curso.catedratico_id 
+                            WHERE catedratico_curso.curso_g_s_id = curso_g_s.id AND catedratico_curso.activo = true
+                            LIMIT 1
+                        ) 
+                        AS catedratico")
+                )
+                ->where('curso_g_s.grado_seccion_id', $cursoG)
+                ->get();
 
+            $alumnos = DB::table('alumno_grado')
+                ->join('alumno', 'alumno_grado.alumno_id', 'alumno.id')
+                ->select('alumno.nombre_completo AS alumno', 'alumno.codigo AS codigo')
+                ->where('alumno_grado.grado_seccion_id', $cursoG)
+                ->where('alumno_grado.anio', $anio_actual)
+                ->get();
+                
+            return view('escuela.sistema.alumno_grado.index_curso ', ['values' => $datos, 'alumnos' => $alumnos]);
         } catch (\Exception $th) {
             if ($th instanceof QueryException)
-                return redirect()->route('cursoGS.index')->with('danger', 'Error en la base de datos');
+                return redirect()->route('alumnoGrado.index')->with('danger', $th->getMessage());
             else
-                return redirect()->route('cursoGS.index')->with('danger', $th->getMessage());
+                return redirect()->route('alumnoGrado.index')->with('danger', $th->getMessage());
         }
     }
 

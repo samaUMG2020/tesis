@@ -71,7 +71,6 @@ class PersonaController extends Controller
             $request,
             [
                 'municipio_id' => 'required|integer|exists:municipio,id'
-                
             ]
 
             );

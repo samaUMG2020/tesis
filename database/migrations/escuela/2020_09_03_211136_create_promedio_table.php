@@ -17,7 +17,7 @@ class CreatePromedioTable extends Migration
             $table->bigIncrements('id');
             $table->decimal('promedio', 5, 2);
             $table->year('anio');
-            $table->json("bimestres");
+            $table->integer("bimestres");
 
             $table->unsignedBigInteger('alumno_grado_id');
             $table->foreign('alumno_grado_id')->references('id')->on('alumno_grado'); 

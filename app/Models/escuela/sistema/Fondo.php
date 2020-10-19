@@ -2,11 +2,16 @@
 
 namespace App\Models\escuela\sistema;
 
-use App\Models\escuela\catalogo\TipoFondo;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\escuela\catalogo\TipoFondo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Fondo extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     protected $table = 'fondos';
     /**
      * The attributes that are mass assignable.
@@ -15,7 +20,7 @@ class Fondo extends Model
      */
 
      protected $fillable = [
-         'cantidad', 'tipo_fondo_id', 'anio'
+        'cantidad', 'tipo_fondo_id', 'anio'
     ];
 
     public function tipo_fondo()

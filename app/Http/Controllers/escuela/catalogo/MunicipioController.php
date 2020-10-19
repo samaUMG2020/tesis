@@ -99,7 +99,6 @@ class MunicipioController extends Controller
      */
     public function destroy(Municipio $municipio)
     {
-        $municipio->delete();
-        return response()->json(['Registro eliminado' => $municipio, 'Mensaje' => 'Felicidades eliminaste']);
+        //
     }
 }

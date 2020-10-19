@@ -1,8 +1,7 @@
 @extends('adminlte::page')
 @section('content_header')
     <h2>
-      Carrera
-      <a href="{{ route('carrera.create') }}" class="btn btn-info">Nuevo</a>       
+      Meses disponibles para pagar    
     </h2>
 
     @if(Session::has('success'))
@@ -36,64 +35,29 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header py-4">
-          <h3 class="card-title">Información registrada</h3>
-
-          <div class="card-tools">
-            <form action="{{ route('carrera.index') }}" method="get" role="search">
-              {{ csrf_field() }}
-              <div class="input-group input-group-sm" style="width: 450px;">
-                <input type="text" name="buscar" class="form-control float-right" placeholder="Buscar">
-  
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+        <div class="card-body table-responsive p-0">
+          <div class="card-body pb-0">
+              <div class="row">
+                <div class="col-md-12 col-xs-12 text-center">
+                  <div class="row d-flex align-items-stretch" style="background-color: #d2d6de;">
+                      <div class="col-md-12 col-xs-12"><br></div>
+                      @foreach ($values as $value)
+                      <div class="col-md-6 col-xs-12">
+                          <div class="small-box bg-success">
+                          <div class="inner text-center">
+                              <h1>{{ $value->nombre }}</h1>
+                              <h4 class="badge badge-info">Pagos realizados {{ $value->pagos_catedraticos->where('anio', date('Y'))->count() }}</h4>
+                          </div>
+                            <a href="{{ route('pagoCatedratico.show', $value->id) }}" class="btn bg-navy btn-flat margin small-box-footer">Registrar pagos<i class="fa fa-arrow-circle-right"></i></a>
+                          </div>
+                      </div>
+                      @endforeach
+                  </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
-        </div>
-        
-        <div class="card-body table-responsive p-0">
-          <table class="table table-head-fixed">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Fecha de ingreso</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if($values->count())  
-                @foreach($values as $value)  
-                <tr>
-                  <td>{{$value->id}}</td>
-                  <td>{{$value->nombre}}</td>
-                  <td>{{$value->created_at}}</td>
-                  <td>
-                    <form action="{{ route('carrera.destroy', $value) }}" method="post">
-                      <a class="btn btn-outline-warning" href="{{ route('carrera.edit', $value) }}" ><span class="fa fa-pencil-alt"></span></a>
-                      {{csrf_field()}}
-                      <input name="_method" type="hidden" value="DELETE">
-                      <button class="btn btn-outline-danger" type="submit"><span class="fa fa-trash-alt"></span></button>
-                    </form>
-                  </td>                  
-               </tr>
-               @endforeach 
-               @else
-               <tr>
-                <td colspan="4">
-                  <div class="callout callout-danger"><h5>Mensaje</h5><p>¡No hay información para mostrar!</p></div>
-                </td>
-              </tr>
-              @endif
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer py-4">
-          <nav class="d-flex justify-content-end" aria-label="...">
-              {{ $values->links() }}
-          </nav>                        
+          <br>
         </div>
       </div>
       

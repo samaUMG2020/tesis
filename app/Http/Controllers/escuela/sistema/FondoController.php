@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
-use App\Http\Controllers\Controller;
-use App\Models\escuela\catalogo\TipoFondo;
-use App\Models\escuela\sistema\Fondo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\escuela\sistema\Fondo;
+use Illuminate\Database\QueryException;
+use App\Models\escuela\catalogo\TipoFondo;
 
 class FondoController extends Controller
 {
@@ -14,11 +16,23 @@ class FondoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $values = Fondo::with('tipo_fondo')->get();
+        try {
+            $tipo_fondos = TipoFondo::all();
 
-        return response()->json($values);
+            if ($request->has('buscar'))
+                $values = Fondo::search($request->buscar)->orderBy('anio', 'DESC')->paginate(10);
+            else
+                $values = Fondo::orderBy('created_at', 'DESC')->paginate(10);
+
+            return view('escuela.sistema.fondo.index ', ['values' => $values, 'tipo_fondos' => $tipo_fondos]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', $th->getMessage());
+            else
+                return redirect()->route('home')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -38,17 +52,41 @@ class FondoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
+    {
+        $this->validate(
+            $request,
+            [
+                'tipo_fondo_id' => 'required|integer|exists:tipo_fondo,id',
+                'fondo' => 'required|starts_with:actual,siguiente'
+            ]
+        );
 
-        $insert =new Fondo(); 
-        $insert->cantidad = $request->cantidad;
-        $insert->anio = $request->anio;
-        $insert->tipo_fondo_id = $request->tipo_fondo_id;
-       
-        $insert->save();
+        try {
 
-        return response()->json(['Registro ingresado' => $insert, 'Mensaje' => 'Felicidades insertaste']);
+            DB::beginTransaction();
 
+            $fondo = new Fondo();
+            $fondo->tipo_fondo_id = $request->tipo_fondo_id;
+            $fondo->cantidad = $request->cantidad;
+
+            if($request->fondo == 'actual') {
+                $fondo->anio = date('Y');
+            } else if($request->fondo == 'siguiente'){
+                $fondo->anio = date("Y", strtotime(date('Y-m-d') . "+ 1 year"));
+            }
+
+            $fondo->save();
+
+            DB::commit();
+
+            return redirect()->route('fondo.index')->with('success', '¡El registro fue creado exitosamente!');
+        } catch (\Exception $th) {
+            DB::rollback();
+            if ($th instanceof QueryException)
+                return redirect()->route('fondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('fondo.index')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -82,12 +120,7 @@ class FondoController extends Controller
      */
     public function update(Request $request, Fondo $fondo)
     { 
-        $fondo->cantidad = $request->cantidad;
-        $fondo->anio = $request->anio;
-        $fondo->tipo_fondo_id = $request->tipo_fondo_id;
-        $fondo->save();
-
-        return response()->json(['Registro editado' => $fondo, 'Mensaje' => 'Felicidades editaste']);
+        //
     }
 
     /**
@@ -98,7 +131,15 @@ class FondoController extends Controller
      */
     public function destroy(Fondo $fondo)
     {
-        $fondo->delete();
-        return response()->json(['Registro eliminado' => $fondo, 'Mensaje' => 'Felicidades eliminaste']);
+        try {
+            $fondo->delete();
+
+            return redirect()->route('fondo.index')->with('info', '¡El registro fue eliminado exitosamente!');
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('fondo.index')->with('danger', 'Error en la base de datos');
+            else
+                return redirect()->route('fondo.index')->with('danger', $th->getMessage());
+        }
     }
 }
