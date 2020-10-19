@@ -6,12 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
-use App\Models\escuela\catalogo\CursoGS;
 use App\Models\escuela\sistema\Catedratico;
 use App\Models\escuela\sistema\CatedraticoCurso;
 
 class CatedraticoCursoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        //$this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

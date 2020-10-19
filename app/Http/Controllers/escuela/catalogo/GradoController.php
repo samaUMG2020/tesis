@@ -15,8 +15,8 @@ class GradoController extends Controller
         $this->middleware('auth');
         //$this->middleware('administrador');
         //$this->middleware('director');
-        $this->middleware('secretaria');
-        $this->middleware('catedratico');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
     }
 
     /**

@@ -13,6 +13,15 @@ use App\Models\escuela\catalogo\Municipio;
 
 class UsuarioController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        //$this->middleware('administrador');
+        $this->middleware('director')->except('index');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

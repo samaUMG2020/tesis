@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\escuela\sistema;
 
-use App\Http\Controllers\Controller;
-use App\Models\escuela\catalogo\Curso;
-use App\Models\escuela\sistema\AlumnoGrado;
-use App\Models\escuela\sistema\Promedio;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
+use App\Models\escuela\sistema\Promedio;
 
 class PromedioController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        //$this->middleware('administrador');
+        //$this->middleware('director');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +25,16 @@ class PromedioController extends Controller
      */
     public function index()
     {
-        $values = Promedio::with('curso')->get();
+        try {
+            $values = Promedio::orderBy('anio', 'DESC')->orderBy('promedio', 'DESC')->paginate(25);
 
-        return response()->json($values);
+            return view('escuela.sistema.promedio.index ', ['values' => $values]);
+        } catch (\Exception $th) {
+            if ($th instanceof QueryException)
+                return redirect()->route('home')->with('danger', $th->getMessage());
+            else
+                return redirect()->route('home')->with('danger', 'Error en el controlador');
+        }
     }
 
     /**
@@ -40,22 +55,7 @@ class PromedioController extends Controller
      */
     public function store(Request $request)
     {
-        $alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
-        $curso = Curso::find($request->curso_id);
-
-        $insert = new Promedio();
-        $insert ->promedio= $request->promedio;
-        $insert ->anio= $request->anio;
-        $insert ->bimestres= $request->bimestres; //ARREGLARLO PORQUE DICE QUE NO DEBE SER NULO 
-        $insert ->alumno_grado_id= $request->alumno_grado_id;
-        $insert ->curso_id= $request->curso_id;
-        $insert->save();
-
-
-        return response()->json(['Registro nuevo' => $insert, 'Mensaje' => 'Felicidades insertaste']);
-   
-        //'promedio', 'anio', 'bimestres', 'alumno_grado_id', 'curso_id'
-    
+        //
     }
 
     /**
@@ -89,18 +89,7 @@ class PromedioController extends Controller
      */
     public function update(Request $request, Promedio $promedio)
     {
-        $alumnoGrado = AlumnoGrado::find($request->alumno_grado_id);
-        $curso = Curso::find($request->curso_id);
-
-        $promedio = new Promedio();
-        $promedio ->promedio= $request->promedio;
-        $promedio ->anio= $request->anio;
-        $promedio ->bimestres= $request->bimestres; 
-        $promedio ->alumno_grado_id= $request->alumno_grado_id;
-        $promedio ->curso_id= $request->curso_id;
-        $promedio->save();
-
-        return response()->json(['Registro editado' => $promedio, 'Mensaje' => 'Felicidades editaste']);
+        //
     }
 
     /**
@@ -111,7 +100,6 @@ class PromedioController extends Controller
      */
     public function destroy(Promedio $promedio)
     {
-        $promedio->delete();
-        return response()->json(['Registro eliminado' => $promedio, 'Mensaje' => 'Felicidades eliminaste']);
+        //
     }
 }

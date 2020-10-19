@@ -13,11 +13,12 @@ class PersonaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('administrador');
+        //$this->middleware('administrador');
         //$this->middleware('director');
-        $this->middleware('secretaria');
-        $this->middleware('catedratico');
+        $this->middleware('secretaria')->only('destroy');
+        $this->middleware('catedratico')->only('create', 'store', 'edit', 'update', 'destroy');
     }
+    
     /**
      * Display a listing of the resource.
      *
@@ -112,14 +113,7 @@ class PersonaController extends Controller
      */
     public function show(Persona $persona)
     {
-        try {
-
-        } catch (\Exception $th) {
-            if ($th instanceof QueryException)
-                return redirect()->route('persona.index')->with('danger', 'Error en la base de datos');
-            else
-                return redirect()->route('persona.index')->with('danger', $th->getMessage());
-        }
+       
     }
 
     /**
