@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
 use App\Models\escuela\sistema\AlumnoGrado;
-use App\Models\escuela\catalogo\GradoSeccion;
-use App\Models\escuela\sistema\Alumno;
 use Illuminate\Support\Facades\DB;
 
 class AlumnoGradoController extends Controller

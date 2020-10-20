@@ -274,9 +274,14 @@ return [
         ],
         ['header' => 'Reportes del sistema'],
         [
-            'text'    => 'Reportes',
+            'text'    => 'Inscripciones por año',
             'icon'    => 'far fa-file-pdf',
-            'url'  => 'usuario'
+            'url'  => 'reporte/inscripcion_view'
+        ],
+        [
+            'text'    => 'Mensualidades por año',
+            'icon'    => 'far fa-file-pdf',
+            'url'  => 'reporte/mensualidad_view'
         ],
         ['header' => 'Acceso al sistema'],
         [
